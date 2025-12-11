@@ -1,6 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
+
 function Menu({ menuItems = [], activePath, isOpen, onClose }) {
     const location = useLocation();
     const currentPath = activePath || location.pathname;
@@ -15,7 +16,6 @@ function Menu({ menuItems = [], activePath, isOpen, onClose }) {
                 `}
                 onClick={onClose}
             />
-
             {/* SIDEBAR */}
             <aside
                 className={`

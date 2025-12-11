@@ -6,6 +6,9 @@ import {
     faSearch,
     faMugHot
 } from "@fortawesome/free-solid-svg-icons";
+import images from "../../assets/images/index.js";
+console.log(images);
+
 
 function Header({ onToggleMenu }) {
     return (
@@ -38,7 +41,6 @@ function Header({ onToggleMenu }) {
                     </div>
                 </div>
 
-                {/* --- MIDDLE: Search bar (giống YouTube) --- */}
                 <div className="hidden md:flex items-center w-[45%]">
                     <div className="flex items-center w-full bg-white border border-[#D8C8B4]
                                     rounded-full overflow-hidden shadow-sm">
@@ -52,8 +54,6 @@ function Header({ onToggleMenu }) {
                         </button>
                     </div>
                 </div>
-
-                {/* --- RIGHT: Icons giống YouTube --- */}
                 <div className="flex items-center gap-4">
 
                     {/* Search Icon cho mobile */}

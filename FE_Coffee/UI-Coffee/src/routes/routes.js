@@ -11,7 +11,7 @@ import BranchPage from "../pages/branch/index.jsx";
 import tablePage from "../pages/table/index.jsx";
 import AccountPage from "../pages/account/index.jsx"
 import statisticsPage from "../pages/statistics/index.jsx";
-console.log(config.routes)
+
 const publicRoutes = [
     {
         path: config.routes.home,

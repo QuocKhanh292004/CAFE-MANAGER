@@ -1,0 +1,7 @@
+function Search() {
+     return (
+         <>
+              search
+         </>
+     )
+}

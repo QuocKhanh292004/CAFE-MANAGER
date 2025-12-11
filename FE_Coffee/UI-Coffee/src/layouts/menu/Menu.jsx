@@ -70,5 +70,4 @@ function Menu({ menuItems = [], activePath, isOpen, onClose }) {
         </>
     );
 }
-
 export default Menu;

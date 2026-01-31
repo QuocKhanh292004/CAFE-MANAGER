@@ -1,15 +1,21 @@
-const  routes = {
-    home: '/' ,
+const routes = {
+    root: '/',
+    home: '/home',
     login: '/login',
     register: '/register',
-    forgotPassword: '/forgotPassword',
+    forgotPassword: '/forgot-password',
     account: '/account',
+    staff: '/staff',
     beverage: '/beverage',
     branch: '/branch',
     category: '/category',
     order: '/order',
-    staff: '/account',
     statistics: '/statistics',
-    table: '/table'
-}
+    table: '/table',
+    customer: '/customer',
+    settings: '/settings',
+    notfound:'/notfound',
+    help:'/help'
+};
+
 export default routes;

@@ -1,182 +1,105 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-    faDollarSign,
-    faClipboardList,
-    faUsers,
-    faMugHot,
-    faArrowUp,
-} from "@fortawesome/free-solid-svg-icons";
+import { faUsers, faChartBar, faSync, faDollarSign, faEllipsisVertical } from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 function Home() {
     return (
-        <div className="space-y-6">
-
-            {/* TIÊU ĐỀ */}
-            <h1 className="text-2xl font-bold text-[#3E2723]">
-                Tổng quan hoạt động
-            </h1>
-
-            {/* THỐNG KÊ NHANH */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-
-                {/* Doanh thu */}
-                <div className="bg-white p-5 rounded-2xl shadow flex items-center gap-4 border border-[#E5D8C8]">
-                    <div className="bg-green-100 text-green-700 w-12 h-12 flex items-center justify-center rounded-xl">
-                        <FontAwesomeIcon icon={faDollarSign} size="lg" />
-                    </div>
-                    <div>
-                        <p className="text-sm text-gray-500">Doanh thu hôm nay</p>
-                        <p className="text-xl font-semibold">5,200,000đ</p>
-                        <p className="text-xs text-green-600 flex items-center gap-1">
-                            <FontAwesomeIcon icon={faArrowUp} /> +12%
-                        </p>
-                    </div>
+        <div className="p-8 space-y-8 max-w-[1600px] mx-auto">
+            {/* Thanh điều hướng phụ */}
+            <div className="flex justify-between items-center text-[12px]">
+                <div className="text-green-500 font-medium flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 bg-green-500 rounded-full"></span> Last updated now
                 </div>
-
-                {/* Đơn hàng */}
-                <div className="bg-white p-5 rounded-2xl shadow flex items-center gap-4 border border-[#E5D8C8]">
-                    <div className="bg-blue-100 text-blue-700 w-12 h-12 flex items-center justify-center rounded-xl">
-                        <FontAwesomeIcon icon={faClipboardList} size="lg" />
-                    </div>
-                    <div>
-                        <p className="text-sm text-gray-500">Đơn hàng hôm nay</p>
-                        <p className="text-xl font-semibold">128 đơn</p>
-                        <p className="text-xs text-green-600 flex items-center gap-1">
-                            <FontAwesomeIcon icon={faArrowUp} /> +5%
-                        </p>
-                    </div>
-                </div>
-
-                {/* Khách hàng */}
-                <div className="bg-white p-5 rounded-2xl shadow flex items-center gap-4 border border-[#E5D8C8]">
-                    <div className="bg-yellow-100 text-yellow-700 w-12 h-12 flex items-center justify-center rounded-xl">
-                        <FontAwesomeIcon icon={faUsers} size="lg" />
-                    </div>
-                    <div>
-                        <p className="text-sm text-gray-500">Khách hôm nay</p>
-                        <p className="text-xl font-semibold">89 khách</p>
-                    </div>
-                </div>
-
-                {/* Sản phẩm bán chạy */}
-                <div className="bg-white p-5 rounded-2xl shadow flex items-center gap-4 border border-[#E5D8C8]">
-                    <div className="bg-red-100 text-red-700 w-12 h-12 flex items-center justify-center rounded-xl">
-                        <FontAwesomeIcon icon={faMugHot} size="lg" />
-                    </div>
-                    <div>
-                        <p className="text-sm text-gray-500">Sản phẩm bán chạy</p>
-                        <p className="text-xl font-semibold">Cà phê sữa đá</p>
-                    </div>
+                <div className="flex gap-2">
+                    <button className="px-4 py-1.5 bg-white border border-gray-100 rounded-lg font-semibold text-gray-600 shadow-sm hover:shadow-md transition">Customize Widget</button>
+                    <button className="px-4 py-1.5 bg-[#6366F1] text-white rounded-lg font-semibold shadow-lg shadow-indigo-100 hover:bg-indigo-700 transition">Exports</button>
                 </div>
             </div>
 
-            {/* BIỂU ĐỒ DOANH THU – FAKE UI */}
-            <div className="bg-white rounded-2xl shadow border border-[#E5D8C8] p-6">
-                <h2 className="text-lg font-semibold mb-4 text-[#3E2723]">
-                    Doanh thu 7 ngày gần nhất
-                </h2>
+            {/* 4 Chỉ số hàng đầu - Card phẳng, viền cực mảnh */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <MiniStat title="Leads" value="129" trend="+2%" icon={faUsers} />
+                <MiniStat title="CLV" value="14d" trend="-4%" isDown icon={faSync} />
+                <MiniStat title="Convertion Rate" value="24%" trend="+2%" icon={faChartBar} />
+                <MiniStat title="Revenue" value="$1.4K" trend="-4%" isDown icon={faDollarSign} />
+            </div>
 
-                <div className="relative h-60 rounded-xl bg-gradient-to-br from-[#F7F3EE] to-[#EEDCC3] p-4 overflow-hidden">
-
-                    {/* Lưới biểu đồ */}
-                    <div className="absolute inset-0 grid grid-rows-5 opacity-20">
-                        {[...Array(5)].map((_, i) => (
-                            <div key={i} className="border-b border-[#5D4037]" />
-                        ))}
+            {/* Layout chính 2 cột */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Biểu đồ doanh thu lớn */}
+                <div className="lg:col-span-2 bg-white rounded-2xl border border-gray-100 p-8 shadow-sm">
+                    <div className="flex justify-between items-start mb-10">
+                        <div>
+                            <p className="text-gray-400 text-[13px] font-medium mb-1">Revenue</p>
+                            <div className="flex items-center gap-3">
+                                <h2 className="text-3xl font-bold text-gray-900">$32.209</h2>
+                                <span className="text-[11px] font-bold text-green-500 bg-green-50 px-2 py-0.5 rounded">+22% vs last month</span>
+                            </div>
+                        </div>
+                        <div className="flex bg-gray-50 p-1 rounded-xl">
+                            {['1D', '1W', '1M', '6M', '1Y', 'ALL'].map(t => (
+                                <button key={t} className={`px-4 py-1 text-[10px] font-bold rounded-lg transition-all ${t==='1Y' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-400 hover:text-gray-600'}`}>{t}</button>
+                            ))}
+                        </div>
                     </div>
-
-                    {/* Cột doanh thu */}
-                    <div className="absolute bottom-0 left-0 right-0 flex items-end gap-3 px-2">
-                        {[40, 55, 60, 80, 75, 90, 70].map((h, i) => (
-                            <div key={i} className="flex flex-col items-center flex-1">
-                                <div
-                                    style={{ height: `${h}%` }}
-                                    className="w-full max-w-[22px] bg-[#C49A6C] rounded-xl shadow-md transition-all duration-700 ease-out hover:bg-[#A67C52]"
-                                ></div>
+                    {/* Fake Chart Bars - Tinh chỉnh độ mảnh */}
+                    <div className="h-64 flex items-end justify-between gap-4 mt-4">
+                        {[45, 35, 40, 30, 42, 25, 40, 38, 30, 22, 18, 12].map((h, i) => (
+                            <div key={i} className="flex-1 flex flex-col items-center gap-4 group">
+                                <div className={`w-full max-w-[14px] rounded-t-[4px] transition-all duration-500 ${i === 11 ? 'bg-[#6366F1]' : 'bg-[#EEF2FF]'}`} style={{ height: `${h}%` }}></div>
+                                <span className="text-[10px] font-bold text-gray-300 group-hover:text-gray-900">M{i+1}</span>
                             </div>
                         ))}
                     </div>
+                </div>
 
-                    {/* Line chart */}
-                    <svg className="absolute inset-0 w-full h-full pointer-events-none">
-                        <polyline
-                            points="
-                    10,200
-                    60,170
-                    110,160
-                    160,120
-                    210,135
-                    260,90
-                    310,140
-                "
-                            fill="none"
-                            stroke="#8B5E34"
-                            strokeWidth="3"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            className="drop-shadow-lg"
-                        />
-
-                        {/* Gradient dưới đường line */}
-                        <defs>
-                            <linearGradient id="lineGradient" x1="0" x2="0" y1="0" y2="1">
-                                <stop offset="0%" stopColor="#C49A6C" stopOpacity="0.4" />
-                                <stop offset="100%" stopColor="#C49A6C" stopOpacity="0" />
-                            </linearGradient>
-                        </defs>
-
-                        <polygon
-                            points="
-                    10,200
-                    60,170
-                    110,160
-                    160,120
-                    210,135
-                    260,90
-                    310,140
-                    310,250
-                    10,250
-                "
-                            fill="url(#lineGradient)"
-                        />
-                    </svg>
+                {/* Widget Lịch & Sự kiện */}
+                <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+                    <div className="flex justify-between items-center mb-6">
+                        <h3 className="text-[14px] font-bold text-gray-900">Calendar</h3>
+                        <FontAwesomeIcon icon={faEllipsisVertical} className="text-gray-300 cursor-pointer" />
+                    </div>
+                    {/* Phần lịch render đơn giản */}
+                    <div className="grid grid-cols-7 text-center text-[11px] font-bold text-gray-400 mb-6 gap-y-4">
+                        {['Su','Mo','Tu','We','Th','Fr','Sa'].map(d => <div key={d}>{d}</div>)}
+                        {[5,6,7,8,9,10,11].map(n => (
+                            <div key={n} className={`py-1 cursor-pointer transition-all ${n===8 ? 'bg-[#6366F1] text-white rounded-full shadow-lg shadow-indigo-100' : 'text-gray-900 hover:bg-gray-50 rounded-full'}`}>{n}</div>
+                        ))}
+                    </div>
+                    <div className="space-y-4 mt-8">
+                        <EventItem title="Mesh Weekly Meeting" time="9:00 am - 10:00 am" color="bg-indigo-500" />
+                        <EventItem title="Gamification Demo" time="10:45 am - 11:45 am" color="bg-orange-400" />
+                    </div>
                 </div>
             </div>
-
-
-            {/* ĐƠN HÀNG GẦN ĐÂY */}
-            <div className="bg-white rounded-2xl shadow border border-[#E5D8C8] p-6">
-                <h2 className="text-lg font-semibold mb-4 text-[#3E2723]">
-                    Đơn hàng gần đây
-                </h2>
-
-                <table className="w-full text-left">
-                    <thead>
-                    <tr className="text-sm text-gray-600 border-b">
-                        <th className="py-2">Mã đơn</th>
-                        <th className="py-2">Khách hàng</th>
-                        <th className="py-2">Tổng tiền</th>
-                        <th className="py-2">Trạng thái</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {[
-                        { id: "#DH001", name: "Nguyễn Thảo", total: "85.000đ", status: "Hoàn thành" },
-                        { id: "#DH002", name: "Trần Minh", total: "55.000đ", status: "Đang pha chế" },
-                        { id: "#DH003", name: "Lê Hoàng", total: "120.000đ", status: "Đang giao" },
-                    ].map((item) => (
-                        <tr key={item.id} className="border-b text-sm">
-                            <td className="py-3">{item.id}</td>
-                            <td>{item.name}</td>
-                            <td>{item.total}</td>
-                            <td className="text-green-700">{item.status}</td>
-                        </tr>
-                    ))}
-                    </tbody>
-                </table>
-            </div>
-
         </div>
-    )
+    );
 }
+// Sub-components hỗ trợ
+const MiniStat = ({ title, value, trend, isDown, icon }) => (
+    <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:border-gray-200 transition-all">
+        <div className="flex justify-between items-center mb-4">
+            <div className="w-9 h-9 border border-gray-50 rounded-full flex items-center justify-center text-gray-800 shadow-sm">
+                <FontAwesomeIcon icon={icon} className="text-[12px]" />
+            </div>
+            <FontAwesomeIcon icon={faEllipsisVertical} className="text-gray-200 text-[12px]" />
+        </div>
+        <p className="text-[13px] font-bold text-gray-400 mb-1">{title}</p>
+        <div className="flex items-center gap-3">
+            <span className="text-2xl font-bold text-gray-900">{value}</span>
+            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md ${isDown ? 'bg-red-50 text-red-500' : 'bg-green-50 text-green-500'}`}>
+                {isDown ? '↓' : '↑'} {trend}
+            </span>
+        </div>
+        <p className="text-[10px] text-gray-300 mt-2 font-medium">vs last week</p>
+    </div>
+);
+const EventItem = ({ title, time, color }) => (
+    <div className="flex gap-4 items-start p-3 hover:bg-gray-50 rounded-xl transition-all cursor-pointer">
+        <div className={`w-1 h-10 ${color} rounded-full`}></div>
+        <div>
+            <h4 className="text-[12px] font-bold text-gray-900">{title}</h4>
+            <p className="text-[10px] text-gray-400 font-medium mt-1">{time}</p>
+        </div>
+    </div>
+);
 export default Home;

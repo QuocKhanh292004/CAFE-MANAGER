@@ -1,82 +1,82 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    faBars,
-    faBell,
-    faUserCircle,
     faSearch,
-    faMugHot
+    faBell,
+    faEnvelope,
+    faShareNodes,
+    faBars
 } from "@fortawesome/free-solid-svg-icons";
-import images from "../../assets/images/index.js";
-console.log(images);
-
 
 function Header({ onToggleMenu }) {
     return (
-        <header className="sticky top-0 z-40 w-full bg-[#F7F3EE] border-b border-[#E5D8C8] shadow-sm">
+        <header className="w-full bg-white border-b border-slate-200 px-6 py-3 flex items-center justify-between shadow-sm">
+            {/* Cụm bên trái: Icon Dashboard & Title */}
+            <div className="flex items-center gap-4">
 
-            <div className="flex items-center justify-between px-4 sm:px-6 py-3">
+                <button
+                    onClick={onToggleMenu}
+                    className="lg:hidden text-slate-800 hover:text-indigo-600 transition-colors"
+                >
+                    <FontAwesomeIcon icon={faBars} size="lg" />
+                </button>
 
-                {/* --- LEFT: Menu button + Logo --- */}
                 <div className="flex items-center gap-3">
 
-                    {/* Nút mở sidebar (giống YouTube mobile) */}
-                    <button
-                        className="lg:hidden w-10 h-10 flex items-center justify-center
-                                   rounded-lg bg-[#4B2E19] text-[#FFF8F0] shadow-md
-                                   hover:bg-[#5c3a23] transition"
-                        onClick={onToggleMenu}
-                    >
-                        <FontAwesomeIcon icon={faBars} />
-                    </button>
-
-                    {/* Logo */}
-                    <div className="flex items-center gap-2 cursor-pointer">
-                        <div className="w-8 h-8 bg-gradient-to-tr from-[#C49A6C] to-[#D7B48C] rounded-xl
-                                        flex items-center justify-center shadow">
-                            <FontAwesomeIcon icon={faMugHot} className="text-white text-lg" />
+                    <div className="text-indigo-600 flex gap-[2px] items-center">
+                        <div className="w-[7px] h-4 bg-indigo-600 rounded-[2px]"></div>
+                        <div className="flex flex-col gap-[2px]">
+                            <div className="w-[7px] h-[7px] bg-slate-800 rounded-sm"></div>
+                            <div className="w-[7px] h-[7px] bg-slate-400 rounded-sm"></div>
                         </div>
-                        <span className="hidden sm:block text-lg font-bold text-[#4B2E19] tracking-wide">
-                            CAFE MANAGER
+                    </div>
+                    <h1 className="text-[17px] font-black text-slate-900 tracking-tight">
+                        Dashboard
+                    </h1>
+                </div>
+            </div>
+
+            {/* Cụm bên phải: Search & Actions */}
+            <div className="flex items-center gap-5">
+                {/* Thanh Search - Đổi background để nổi bật hơn */}
+                <div className="relative group hidden md:block">
+                    <span className="absolute inset-y-0 left-3 flex items-center text-slate-500">
+                        <FontAwesomeIcon icon={faSearch} className="text-[14px]" />
+                    </span>
+                    <input
+                        type="text"
+                        placeholder="Tìm kiếm..."
+                        className="pl-10 pr-4 py-2 w-64 text-[13px] text-slate-700 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-50/50 transition-all placeholder:text-slate-400 font-medium"
+                    />
+                </div>
+
+
+                <div className="flex items-center gap-3">
+                    {/* Bell Icon với chấm đỏ tươi */}
+                    <button className="w-10 h-10 flex items-center justify-center border border-slate-200 rounded-xl hover:bg-slate-50 hover:border-slate-300 hover:text-indigo-600 text-slate-600 transition-all relative shadow-sm">
+                        <FontAwesomeIcon icon={faBell} className="text-[16px]" />
+                        <span className="absolute top-2.5 right-3 w-[7px] h-[7px] bg-rose-500 rounded-full border-2 border-white"></span>
+                    </button>
+
+                    {/* Mail Icon với Badge đỏ đậm */}
+                    <button className="w-10 h-10 flex items-center justify-center border border-slate-200 rounded-xl hover:bg-slate-50 hover:border-slate-300 hover:text-indigo-600 text-slate-600 transition-all relative shadow-sm">
+                        <FontAwesomeIcon icon={faEnvelope} className="text-[16px]" />
+                        <span className="absolute -top-1.5 -right-1.5 bg-rose-600 text-white text-[10px] font-black px-1.5 h-5 flex items-center justify-center rounded-full border-2 border-white shadow-md">
+                            12
                         </span>
-                    </div>
-                </div>
-
-                <div className="hidden md:flex items-center w-[45%]">
-                    <div className="flex items-center w-full bg-white border border-[#D8C8B4]
-                                    rounded-full overflow-hidden shadow-sm">
-                        <input
-                            type="text"
-                            placeholder="Tìm kiếm món, nhân viên, bàn phục vụ..."
-                            className="flex-1 px-4 py-2 outline-none text-[#4B2E19] text-sm"
-                        />
-                        <button className="px-4 py-2 bg-[#4B2E19] text-white hover:bg-[#5c3a23] transition">
-                            <FontAwesomeIcon icon={faSearch} />
-                        </button>
-                    </div>
-                </div>
-                <div className="flex items-center gap-4">
-
-                    {/* Search Icon cho mobile */}
-                    <button className="md:hidden w-10 h-10 flex items-center justify-center
-                                       text-[#4B2E19] hover:bg-[#EFE7DD] rounded-full transition">
-                        <FontAwesomeIcon icon={faSearch} />
                     </button>
 
-                    {/* Notification bell */}
-                    <button className="w-10 h-10 flex items-center justify-center
-                                       text-[#4B2E19] hover:bg-[#EFE7DD] rounded-full transition relative">
-                        <FontAwesomeIcon icon={faBell} />
-                        {/* Chấm đỏ thông báo */}
-                        <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full"></span>
+                    {/* Share Icon */}
+                    <button className="w-10 h-10 flex items-center justify-center border border-slate-200 rounded-xl hover:bg-slate-50 hover:border-slate-300 hover:text-indigo-600 text-slate-600 transition-all shadow-sm">
+                        <FontAwesomeIcon icon={faShareNodes} className="text-[16px]" />
                     </button>
 
-                    {/* Avatar admin */}
-                    <button className="w-10 h-10 flex items-center justify-center">
-                        <FontAwesomeIcon
-                            icon={faUserCircle}
-                            className="text-3xl text-[#4B2E19]"
-                        />
-                    </button>
+                    {/* Đường kẻ ngăn cách */}
+                    <div className="h-8 w-[1px] bg-slate-200 mx-1"></div>
+
+                    {/* Giả lập Avatar người dùng */}
+                    {/*<div className="w-10 h-10 rounded-xl bg-indigo-100 border border-indigo-200 overflow-hidden cursor-pointer hover:ring-2 hover:ring-indigo-300 transition-all">*/}
+                    {/*    <img src="https://ui-avatars.com/api/?name=Admin&background=6366f1&color=fff" alt="avatar" />*/}
+                    {/*</div>*/}
                 </div>
             </div>
         </header>

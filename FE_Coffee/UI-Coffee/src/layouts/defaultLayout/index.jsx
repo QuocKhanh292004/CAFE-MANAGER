@@ -3,7 +3,6 @@ import Menu from "../menu/Menu.jsx";
 import Header from "../../components/header/Header.jsx";
 import { adminMenu } from "../menu/AdminMenu.js";
 import { customerMenu } from "../menu/CustomerMenu.js";
-
 function DefaultLayout({ children }) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     useEffect(() => {

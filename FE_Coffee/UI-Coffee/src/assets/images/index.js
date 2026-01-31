@@ -1,5 +1,5 @@
-import login from '../../assets/images/login.png';
+import logo from './logo.png';
 const images = {
-    login
+   logo
 };
 export default images;

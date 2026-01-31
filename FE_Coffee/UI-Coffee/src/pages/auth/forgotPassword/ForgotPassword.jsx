@@ -23,7 +23,7 @@ const ForgotPassword = () => {
                 className="hidden lg:flex w-1/2 relative flex-col justify-end pb-16 px-12 overflow-hidden bg-stone-100">
                 <div
                     className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 hover:scale-105"
-                    style={{backgroundImage: "url('https://images.unsplash.com/photo-1517260517208-8e6f30e07172?q=80&w=2670&auto=format&fit=crop')"}}
+                    style={{backgroundImage: "url('https://images.unsplash.com/photo-1542372147193-a7aca54189cd?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)"}}
                 ></div>
                 {/* Lớp phủ tối màu (Gradient) */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent z-10"></div>

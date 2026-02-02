@@ -1,12 +1,11 @@
-import request from "../utils/request.js";
+import request from "../utils/request";
 
-//  export const getCategories = () => {
-//          try {
-//             const res = request.get('/category')
-//               res.data
-//          }
-//          catch (error) {
-//              console.log(error)
-//          }
-// }
-//
+export const getCategories = async (branchId) => {
+    if (!branchId) return [];
+
+    const response = await request.get(
+        `/menu/categories?branch_id=${branchId}`
+    );
+
+    return response.data?.data || response.data || [];
+};

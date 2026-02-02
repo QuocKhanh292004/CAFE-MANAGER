@@ -32,7 +32,7 @@ const CategoryManagement = () => {
 
     // Filtrage et pagination
     const filteredCategories = data.categories.filter(cat =>
-        cat.name?.toLowerCase().includes(data.searchTerm.toLowerCase())
+        cat.category_name?.toLowerCase().includes(data.searchTerm.toLowerCase())
     );
 
     const { currentPage, totalPages, totalItems, startItem, endItem, currentData, goToPage } =
@@ -43,8 +43,10 @@ const CategoryManagement = () => {
         getBranches: async () => {
             setLoading(prev => ({ ...prev, branches: true }));
             try {
-                const { data } = await request.get('branches');
-                return data || [];
+                const response = await request.get('branches');
+                // Xử lý cả trường hợp response có data wrapper hoặc không
+                const branches = response.data?.data || response.data || [];
+                return branches;
             } catch (error) {
                 console.error('Error getBranches:', error);
                 return [];
@@ -60,11 +62,15 @@ const CategoryManagement = () => {
             }
             setLoading(prev => ({ ...prev, categories: true }));
             try {
-                const { data } = await request.get(`http://localhost:3000/api/menu/categories?branch_id=${branchId}`);
-                console.log(data ,'dưhfefheufhewuifhewuih sdưdwđata');
-                setData(prev => ({ ...prev, categories: data || [] }));
+                const response = await request.get(`http://localhost:3000/api/menu/categories?branch_id=${branchId}`);
+                console.log('Full Response:', response);
+
+                const categories = response.data?.data || response.data || [];
+                console.log('Extracted Categories:', categories);
+
+                setData(prev => ({ ...prev, categories }));
             } catch (error) {
-                console.error('Error getCategories:', error);
+                console.error(' lỗiiiiiii:', error);
                 setData(prev => ({ ...prev, categories: [] }));
             } finally {
                 setLoading(prev => ({ ...prev, categories: false }));
@@ -73,8 +79,8 @@ const CategoryManagement = () => {
 
         saveCategory: async (categoryData) => {
             const endpoint = modal.mode === 'add'
-                ? '/api/menu/categories'
-                : `/api/menu/categories/${modal.selectedCategory.id}`;
+                ? '/menu/categories'
+                : `/menu/categories/${modal.selectedCategory.category_id}`;
 
             const method = modal.mode === 'add' ? 'post' : 'put';
 
@@ -86,18 +92,22 @@ const CategoryManagement = () => {
         },
 
         deleteCategory: async (id) => {
-            await request.delete(`/api/menu/categories/${id}`);
+            await request.delete(`/menu/categories/${id}`);
         }
     };
 
     // Handlers
     const handlers = {
         openAdd: () => {
-            if (!data.selectedBranch) return alert('Vui lòng chọn chi nhánh!');
+            if (!data.selectedBranch) {
+                alert('Vui lòng chọn chi nhánh!');
+                return;
+            }
             setModal({ isOpen: true, mode: 'add', selectedCategory: null });
         },
 
         openEdit: (category) => {
+            console.log('Opening edit for category:', category);
             setModal({ isOpen: true, mode: 'update', selectedCategory: category });
         },
 
@@ -119,11 +129,14 @@ const CategoryManagement = () => {
                 await api.getCategories(data.selectedBranch);
             } catch (error) {
                 console.error('Error delete:', error);
+                alert('Lỗi khi xóa danh mục');
             }
         },
 
         changeBranch: (branchId) => {
-            setData(prev => ({ ...prev, selectedBranch: Number(branchId) }));
+            const numericBranchId = Number(branchId);
+            console.log('Changing branch to:', numericBranchId);
+            setData(prev => ({ ...prev, selectedBranch: numericBranchId }));
         },
 
         search: (term) => {
@@ -131,10 +144,11 @@ const CategoryManagement = () => {
         }
     };
 
-    // Initialize
+    // Initialize - Load branches
     useEffect(() => {
         (async () => {
             const branches = await api.getBranches();
+            console.log('Loaded branches:', branches);
             setData(prev => ({
                 ...prev,
                 branches,
@@ -145,8 +159,17 @@ const CategoryManagement = () => {
 
     // Load categories when branch changes
     useEffect(() => {
-        if (data.selectedBranch) api.getCategories(data.selectedBranch);
+        if (data.selectedBranch) {
+            console.log('Loading categories for branch:', data.selectedBranch);
+            api.getCategories(data.selectedBranch);
+        }
     }, [data.selectedBranch]);
+
+    // Debug filtered categories
+    useEffect(() => {
+        console.log('Filtered categories:', filteredCategories);
+        console.log('Current page data:', currentData);
+    }, [filteredCategories, currentData]);
 
     // Render helpers
     const EmptyState = ({ icon, title, subtitle }) => (
@@ -220,7 +243,7 @@ const CategoryManagement = () => {
                             <option value="">{loading.branches ? 'Đang tải...' : 'Chọn chi nhánh'}</option>
                             {data.branches.map((branch) => (
                                 <option key={branch.branch_id} value={branch.branch_id}>
-                                      Chi nhánh  {branch.branch_id} :  {branch.branch_name}
+                                    Chi nhánh {branch.branch_id} : {branch.branch_name}
                                 </option>
                             ))}
                         </select>
@@ -285,7 +308,6 @@ const CategoryManagement = () => {
                                             </div>
                                         </td>
                                         <td className="py-4 px-6 border-x border-slate-100">
-                                            {/* Sử dụng category_name */}
                                             <span className="text-slate-700 font-bold text-base">{cat.category_name}</span>
                                         </td>
                                         <td className="py-4 px-6">
@@ -293,12 +315,14 @@ const CategoryManagement = () => {
                                                 <button
                                                     onClick={() => handlers.openEdit(cat)}
                                                     className="w-10 h-10 flex items-center justify-center text-emerald-600 hover:bg-emerald-50 rounded-lg transition-all active:scale-90"
+                                                    title="Chỉnh sửa"
                                                 >
                                                     <FontAwesomeIcon icon={faEdit} />
                                                 </button>
                                                 <button
-                                                    onClick={() => handlers.delete(cat.category_id)} // Sử dụng category_id
+                                                    onClick={() => handlers.delete(cat.category_id)}
                                                     className="w-10 h-10 flex items-center justify-center text-red-500 hover:bg-red-50 rounded-lg transition-all active:scale-90"
+                                                    title="Xóa"
                                                 >
                                                     <FontAwesomeIcon icon={faTrashAlt} />
                                                 </button>
@@ -347,6 +371,7 @@ const CategoryManagement = () => {
                 )}
             </div>
 
+            {/* Modal */}
             <CategoryModal
                 isOpen={modal.isOpen}
                 onClose={() => setModal({ isOpen: false, mode: 'add', selectedCategory: null })}

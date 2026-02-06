@@ -1,7 +1,7 @@
-import CategoryManagement from './Category';
+import CategoryManagement from '../category/CategoryManagement/CategoryManagement.jsx';
 function CategoryPage() {
      return(
-        <CategoryManagement></CategoryManagement>
+          <CategoryManagement></CategoryManagement>
      )
 }
 export default CategoryPage;

@@ -6,7 +6,7 @@ const request = axios.create({
     'Content-Type': 'application/json',
   },
 });
-/* ================= REQUEST INTERCEPTOR ================= */
+
 request.interceptors.request.use(
     (config) => {
       const token = localStorage.getItem('token');
@@ -19,7 +19,7 @@ request.interceptors.request.use(
       return Promise.reject(error);
     }
 );
-/* ================= RESPONSE INTERCEPTOR (OPTIONAL) ================= */
+
 request.interceptors.response.use(
     (response) => response.data,
     (error) => {

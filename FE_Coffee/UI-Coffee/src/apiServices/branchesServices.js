@@ -1,7 +1,5 @@
 import request from "../utils/request.js";
 
-console.log(request, 'hhhhhhhhfđsfdùe');
-
 // get data nhánh
 export const getBranches = async () => {
     try {

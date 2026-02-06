@@ -1,30 +1,110 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faEdit, faTrashAlt, faSearch, faPlus,
     faAngleLeft, faAngleRight, faAngleDoubleLeft, faAngleDoubleRight
 } from '@fortawesome/free-solid-svg-icons';
 import usePagination from '../../hook/usePagination.js';
-import AccountModal from './AccountModal.jsx'; // Bạn sẽ tạo modal này sau
+import AccountModal from './AccountModal.jsx';
+import {branchUsers, getUser} from "../../apiServices/usersServices.js";
+import {getBranches} from "../../apiServices/branchesServices.js";
 
 function Account() {
-    // Dữ liệu mẫu dựa trên ảnh screenshot
-    const [allAccounts, setAllAccounts] = useState([
-        { id: 1, username: 'admin123', role: 'Admin', email: 'admin123@gmail.com', branches: 'Chi nhánh 1, Chi nhánh 2, Chi nhánh 3, Chi nhánh 4, Chi nhánh 5', isLocked: false },
-        { id: 2, username: 'user123', role: 'Nhân viên', email: 'user@gmail.com', branches: 'Chi nhánh 5', isLocked: false },
-        { id: 3, username: 'RECEPTIONIST', role: 'Nhân viên', email: 'RECEPTIONIST@gmail.com', branches: 'Chi nhánh 3', isLocked: false },
-        { id: 4, username: 'superadmin', role: 'Admin', email: 'superadmin@gmail.com', branches: 'Chi nhánh 1, Chi nhánh 2, Chi nhánh 3, Chi nhánh 4', isLocked: false },
-    ]);
+    const [allAccounts, setAllAccounts] = useState([]);
+    const [branches, setBranches] = useState([]);
+    const [loading, setLoading] = useState(false);
 
+    const [filters, setFilters] = useState({
+        username: '',
+        branchId: ''
+    });
     const [itemsPerPage, setItemsPerPage] = useState(5);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalMode, setModalMode] = useState('add');
     const [selectedAccount, setSelectedAccount] = useState(null);
 
-    // Sử dụng hook phân trang của bạn
+    // Load danh sách chi nhánh khi component mount
+    useEffect(() => {
+        loadBranches();
+    }, []);
+
+    // Tự động load người dùng khi chọn chi nhánh
+    useEffect(() => {
+        if (filters.branchId) {
+            loadAccountsByBranch(filters.branchId);
+        } else {
+            setAllAccounts([]);
+        }
+    }, [filters.branchId]);
+
+    // Load danh sách tài khoản
+    const loadBranches = async () => {
+        try {
+            const branchData = await getBranches();
+            console.log('Branches loaded:', branchData); // Debug
+            setBranches(branchData || []);
+        } catch (error) {
+            console.error('Lỗi khi tải danh sách chi nhánh:', error);
+        }
+    };
+
+    // Load tài khoản theo chi nhánh
+    const loadAccountsByBranch = async (branchId) => {
+        if (!branchId) return;
+
+        setLoading(true);
+        try {
+            console.log('Loading users for branch:', branchId);
+            const data = await branchUsers(branchId);
+            console.log('Users data:', data);
+
+            // Format dữ liệu từ API
+            const formattedAccounts = data.map(user => ({
+                id: user.user_id,
+                username: user.username,
+                role: user.role_name || 'Nhân viên',
+                email: user.email,
+                branches: user.branch_names || '',
+                isLocked: user.is_locked || false
+            }));
+
+            console.log('Formatted accounts:', formattedAccounts); // Debug
+            setAllAccounts(formattedAccounts);
+        } catch (error) {
+            console.error('Lỗi khi tải danh sách tài khoản:', error);
+            setAllAccounts([]);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
+    const handleSearch = () => {
+        if (filters.branchId) {
+            loadAccountsByBranch(filters.branchId);
+        } else {
+            alert('Vui lòng chọn chi nhánh để tìm kiếm');
+        }
+    };
+
+
+    const filteredAccounts = allAccounts.filter(account => {
+        if (filters.username) {
+            return account.username.toLowerCase().includes(filters.username.toLowerCase());
+        }
+        return true;
+    });
+
+    // Cập nhật pagination với dữ liệu đã lọc
     const {
-        currentPage, totalPages, totalItems, startItem, endItem, currentData, goToPage,
-    } = usePagination(allAccounts, itemsPerPage);
+        currentPage: filteredCurrentPage,
+        totalPages: filteredTotalPages,
+        totalItems: filteredTotalItems,
+        startItem: filteredStartItem,
+        endItem: filteredEndItem,
+        currentData: filteredCurrentData,
+        goToPage: filteredGoToPage,
+    } = usePagination(filteredAccounts, itemsPerPage);
 
     const handleOpenAdd = () => {
         setModalMode('add');
@@ -36,6 +116,13 @@ function Account() {
         setModalMode('update');
         setSelectedAccount(account);
         setIsModalOpen(true);
+    };
+
+    // Callback sau khi thêm/sửa thành công
+    const handleModalSuccess = () => {
+        if (filters.branchId) {
+            loadAccountsByBranch(filters.branchId);
+        }
     };
 
     return (
@@ -56,13 +143,29 @@ function Account() {
                 <input
                     type="text"
                     placeholder="Tên tài khoản"
+                    value={filters.username}
+                    onChange={(e) => setFilters({...filters, username: e.target.value})}
                     className="w-full px-4 py-2.5 border border-slate-200 rounded-lg outline-none text-sm bg-slate-50/50"
                 />
-                <select className="w-full px-4 py-2.5 border border-slate-200 rounded-lg outline-none text-sm bg-slate-50/50 text-slate-400">
-                    <option>Chi nhánh</option>
+                <select
+                    value={filters.branchId}
+                    onChange={(e) => setFilters({...filters, branchId: e.target.value})}
+                    className="w-full px-4 py-2.5 border border-slate-200 rounded-lg outline-none text-sm bg-slate-50/50 text-slate-700"
+                >
+                    <option value="">Chọn chi nhánh</option>
+                    {branches.map(branch => (
+                        <option key={branch.branch_id} value={branch.branch_id}>
+                            {branch.branch_name}
+                        </option>
+                    ))}
                 </select>
-                <button className="bg-[#1e293b] hover:bg-slate-900 text-white rounded-lg font-bold text-sm h-[42px] flex items-center justify-center gap-2 shadow-sm transition-all">
-                    <FontAwesomeIcon icon={faSearch} /> Tìm Kiếm
+                <button
+                    onClick={handleSearch}
+                    disabled={loading}
+                    className="bg-[#1e293b] hover:bg-slate-900 text-white rounded-lg font-bold text-sm h-[42px] flex items-center justify-center gap-2 shadow-sm transition-all disabled:opacity-50"
+                >
+                    <FontAwesomeIcon icon={faSearch} />
+                    {loading ? 'Đang tải...' : 'Tìm Kiếm'}
                 </button>
             </div>
 
@@ -81,61 +184,77 @@ function Account() {
                         </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-50 text-sm">
-                        {currentData.map((account) => (
-                            <tr key={account.id} className="hover:bg-slate-50/50 transition-colors">
-                                <td className="py-4 px-4 font-medium text-slate-700">{account.username}</td>
-                                <td className="py-4 px-4 border-x border-slate-50 text-slate-500">{account.role}</td>
-                                <td className="py-4 px-4 border-r border-slate-50 text-slate-500">{account.email}</td>
-                                <td className="py-4 px-4 border-r border-slate-50 text-slate-500 text-xs">{account.branches}</td>
-                                <td className="py-4 px-4 border-r border-slate-50 text-center">
-                                    <input
-                                        type="checkbox"
-                                        checked={account.isLocked}
-                                        className="w-4 h-4 rounded border-slate-300 text-slate-800 focus:ring-slate-500 cursor-pointer"
-                                        readOnly
-                                    />
-                                </td>
-                                <td className="py-4 px-4">
-                                    <div className="flex justify-center gap-4">
-                                        <button onClick={() => handleOpenEdit(account)} className="text-slate-600 hover:text-slate-900 transition-colors">
-                                            <FontAwesomeIcon icon={faEdit} />
-                                        </button>
-                                        <button className="text-slate-300 hover:text-red-500 transition-colors">
-                                            <FontAwesomeIcon icon={faTrashAlt} />
-                                        </button>
-                                    </div>
+                        {loading ? (
+                            <tr>
+                                <td colSpan="6" className="py-8 text-center text-slate-400">
+                                    Đang tải dữ liệu...
                                 </td>
                             </tr>
-                        ))}
+                        ) : filteredCurrentData.length === 0 ? (
+                            <tr>
+                                <td colSpan="6" className="py-8 text-center text-slate-400">
+                                    {filters.branchId ? 'Không có dữ liệu' : 'Vui lòng chọn chi nhánh để xem danh sách tài khoản'}
+                                </td>
+                            </tr>
+                        ) : (
+                            filteredCurrentData.map((account) => (
+                                <tr key={account.id} className="hover:bg-slate-50/50 transition-colors">
+                                    <td className="py-4 px-4 font-medium text-slate-700">{account.username}</td>
+                                    <td className="py-4 px-4 border-x border-slate-50 text-slate-500">{account.role}</td>
+                                    <td className="py-4 px-4 border-r border-slate-50 text-slate-500">{account.email}</td>
+                                    <td className="py-4 px-4 border-r border-slate-50 text-slate-500 text-xs">{account.branches}</td>
+                                    <td className="py-4 px-4 border-r border-slate-50 text-center">
+                                        <input
+                                            type="checkbox"
+                                            checked={account.isLocked}
+                                            className="w-4 h-4 rounded border-slate-300 text-slate-800 focus:ring-slate-500 cursor-pointer"
+                                            readOnly
+                                        />
+                                    </td>
+                                    <td className="py-4 px-4">
+                                        <div className="flex justify-center gap-4">
+                                            <button onClick={() => handleOpenEdit(account)} className="text-slate-600 hover:text-slate-900 transition-colors">
+                                                <FontAwesomeIcon icon={faEdit} />
+                                            </button>
+                                            <button className="text-slate-300 hover:text-red-500 transition-colors">
+                                                <FontAwesomeIcon icon={faTrashAlt} />
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))
+                        )}
                         </tbody>
                     </table>
                 </div>
 
                 {/* Phân trang */}
-                <div className="px-6 py-4 bg-white border-t border-slate-100 flex flex-col md:flex-row justify-end items-center gap-6 text-[11px] font-bold uppercase tracking-wider text-slate-400">
-                    <div className="flex items-center gap-2">
-                        <span>Tổng số trên 1 trang:</span>
-                        <select
-                            value={itemsPerPage}
-                            onChange={(e) => { setItemsPerPage(Number(e.target.value)); goToPage(1); }}
-                            className="bg-transparent border-none focus:ring-0 cursor-pointer text-slate-600 outline-none"
-                        >
-                            <option value={5}>5</option>
-                            <option value={10}>10</option>
-                        </select>
-                    </div>
+                {!loading && filteredCurrentData.length > 0 && (
+                    <div className="px-6 py-4 bg-white border-t border-slate-100 flex flex-col md:flex-row justify-end items-center gap-6 text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                        <div className="flex items-center gap-2">
+                            <span>Tổng số trên 1 trang:</span>
+                            <select
+                                value={itemsPerPage}
+                                onChange={(e) => { setItemsPerPage(Number(e.target.value)); filteredGoToPage(1); }}
+                                className="bg-transparent border-none focus:ring-0 cursor-pointer text-slate-600 outline-none"
+                            >
+                                <option value={5}>5</option>
+                                <option value={10}>10</option>
+                            </select>
+                        </div>
 
-                    <div className="flex items-center gap-4">
-                        <span className="text-slate-300">Hiển thị từ {startItem} - {endItem} trên tổng số {totalItems}</span>
-                        <div className="flex items-center gap-1">
-                            <button onClick={() => goToPage(1)} disabled={currentPage === 1} className="p-2 disabled:opacity-20"><FontAwesomeIcon icon={faAngleDoubleLeft} /></button>
-                            <button onClick={() => goToPage(currentPage - 1)} disabled={currentPage === 1} className="p-2 disabled:opacity-20"><FontAwesomeIcon icon={faAngleLeft} /></button>
-                            <span className="bg-[#1e293b] text-white w-7 h-7 flex items-center justify-center rounded-full shadow-md">{currentPage}</span>
-                            <button onClick={() => goToPage(currentPage + 1)} disabled={currentPage === totalPages} className="p-2 disabled:opacity-20"><FontAwesomeIcon icon={faAngleRight} /></button>
-                            <button onClick={() => goToPage(totalPages)} disabled={currentPage === totalPages} className="p-2 disabled:opacity-20"><FontAwesomeIcon icon={faAngleDoubleRight} /></button>
+                        <div className="flex items-center gap-4">
+                            <span className="text-slate-300">Hiển thị từ {filteredStartItem} - {filteredEndItem} trên tổng số {filteredTotalItems}</span>
+                            <div className="flex items-center gap-1">
+                                <button onClick={() => filteredGoToPage(1)} disabled={filteredCurrentPage === 1} className="p-2 disabled:opacity-20"><FontAwesomeIcon icon={faAngleDoubleLeft} /></button>
+                                <button onClick={() => filteredGoToPage(filteredCurrentPage - 1)} disabled={filteredCurrentPage === 1} className="p-2 disabled:opacity-20"><FontAwesomeIcon icon={faAngleLeft} /></button>
+                                <span className="bg-[#1e293b] text-white w-7 h-7 flex items-center justify-center rounded-full shadow-md">{filteredCurrentPage}</span>
+                                <button onClick={() => filteredGoToPage(filteredCurrentPage + 1)} disabled={filteredCurrentPage === filteredTotalPages} className="p-2 disabled:opacity-20"><FontAwesomeIcon icon={faAngleRight} /></button>
+                                <button onClick={() => filteredGoToPage(filteredTotalPages)} disabled={filteredCurrentPage === filteredTotalPages} className="p-2 disabled:opacity-20"><FontAwesomeIcon icon={faAngleDoubleRight} /></button>
+                            </div>
                         </div>
                     </div>
-                </div>
+                )}
             </div>
 
             <AccountModal
@@ -143,6 +262,7 @@ function Account() {
                 onClose={() => setIsModalOpen(false)}
                 mode={modalMode}
                 initialData={selectedAccount}
+                onSuccess={handleModalSuccess}
             />
         </div>
     );

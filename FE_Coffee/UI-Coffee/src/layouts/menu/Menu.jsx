@@ -13,7 +13,8 @@ import LogoutButton from "../../components/logout/Logout.jsx";
 function Menu({ menuItems = [], activePath, isOpen, onClose }) {
     const location = useLocation();
     const currentPath = activePath || location.pathname;
-    const getUserName = localStorage.getItem('user');
+    const user = JSON.parse(localStorage.getItem('user'));
+
     return (
         <>
             <div
@@ -50,7 +51,7 @@ function Menu({ menuItems = [], activePath, isOpen, onClose }) {
                                 className="w-6 h-6 rounded-md object-cover"
                                 alt="avatar"
                             />
-                            <span className="text-[13px] font-medium text-gray-800 truncate">williams@mesh.com</span>
+                            <span className="text-[13px] font-medium text-gray-800 truncate">{user.email}</span>
                         </div>
                         <div className="flex flex-col text-[8px] text-gray-400">
                             <FontAwesomeIcon icon={faChevronUp} className="mb-[-2px]" />

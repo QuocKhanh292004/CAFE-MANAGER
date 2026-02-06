@@ -13,6 +13,7 @@ import LogoutButton from "../../components/logout/Logout.jsx";
 function Menu({ menuItems = [], activePath, isOpen, onClose }) {
     const location = useLocation();
     const currentPath = activePath || location.pathname;
+    const getUserName = localStorage.getItem('user');
     return (
         <>
             <div

@@ -1,105 +1,316 @@
-import { faUsers, faChartBar, faSync, faDollarSign, faEllipsisVertical } from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import React, { useState } from 'react';
 
-function Home() {
+const CafeDashboard = () => {
+    const [timeFilter, setTimeFilter] = useState('7days');
+
+    // Sample data
+    const stats = [
+        {
+            id: 1,
+            title: 'Doanh thu hôm nay',
+            value: '15.5M',
+            unit: 'VNĐ',
+            change: '+12%',
+            icon: 'fa-dollar-sign',
+            gradient: 'from-blue-500 to-blue-600',
+            bgIcon: 'bg-white/20'
+        },
+        {
+            id: 2,
+            title: 'Đơn hàng',
+            value: '128',
+            unit: 'Hôm nay',
+            change: '+8%',
+            icon: 'fa-shopping-cart',
+            gradient: 'from-purple-500 to-purple-600',
+            bgIcon: 'bg-white/20'
+        },
+        {
+            id: 3,
+            title: 'Khách hàng',
+            value: '342',
+            unit: 'Lượt phục vụ',
+            change: '+15%',
+            icon: 'fa-users',
+            gradient: 'from-green-500 to-green-600',
+            bgIcon: 'bg-white/20'
+        },
+        {
+            id: 4,
+            title: 'Sản phẩm',
+            value: '87',
+            unit: 'Loại thức uống',
+            change: '5 sắp hết',
+            icon: 'fa-coffee',
+            gradient: 'from-orange-500 to-orange-600',
+            bgIcon: 'bg-white/20',
+            changeColor: 'bg-yellow-300 text-gray-800'
+        }
+    ];
+
+    const recentOrders = [
+        {
+            id: '#ORD-1234',
+            table: 'Bàn 5',
+            items: 2,
+            amount: '285.000đ',
+            status: 'completed',
+            statusText: 'Hoàn thành',
+            iconBg: 'bg-blue-100',
+            iconColor: 'text-blue-600'
+        },
+        {
+            id: '#ORD-1235',
+            table: 'Bàn 3',
+            items: 4,
+            amount: '420.000đ',
+            status: 'processing',
+            statusText: 'Đang xử lý',
+            iconBg: 'bg-purple-100',
+            iconColor: 'text-purple-600'
+        },
+        {
+            id: '#ORD-1236',
+            table: 'Bàn 8',
+            items: 3,
+            amount: '315.000đ',
+            status: 'completed',
+            statusText: 'Hoàn thành',
+            iconBg: 'bg-green-100',
+            iconColor: 'text-green-600'
+        }
+    ];
+
+    const topProducts = [
+        {
+            id: 1,
+            name: 'Cappuccino',
+            sold: 156,
+            revenue: '4.2M',
+            percentage: 85,
+            icon: 'fa-mug-hot',
+            gradient: 'from-amber-400 to-orange-500',
+            barColor: 'bg-amber-500'
+        },
+        {
+            id: 2,
+            name: 'Trà sữa trân châu',
+            sold: 142,
+            revenue: '3.8M',
+            percentage: 75,
+            icon: 'fa-leaf',
+            gradient: 'from-green-400 to-emerald-500',
+            barColor: 'bg-green-500'
+        },
+        {
+            id: 3,
+            name: 'Sinh tố dâu',
+            sold: 128,
+            revenue: '3.2M',
+            percentage: 65,
+            icon: 'fa-ice-cream',
+            gradient: 'from-blue-400 to-cyan-500',
+            barColor: 'bg-blue-500'
+        },
+        {
+            id: 4,
+            name: 'Bánh Tiramisu',
+            sold: 95,
+            revenue: '2.8M',
+            percentage: 55,
+            icon: 'fa-cookie-bite',
+            gradient: 'from-purple-400 to-pink-500',
+            barColor: 'bg-purple-500'
+        }
+    ];
+
+    const quickStats = [
+        { label: 'Tăng trưởng', value: '+18.2%', icon: 'fa-chart-line', bg: 'bg-blue-50', iconBg: 'bg-blue-500' },
+        { label: 'Đánh giá TB', value: '4.8/5.0', icon: 'fa-star', bg: 'bg-green-50', iconBg: 'bg-green-500' },
+        { label: 'Thời gian TB', value: '12 phút', icon: 'fa-clock', bg: 'bg-purple-50', iconBg: 'bg-purple-500' },
+        { label: 'Lợi nhuận', value: '42%', icon: 'fa-percentage', bg: 'bg-orange-50', iconBg: 'bg-orange-500' }
+    ];
+
+    const chartData = [
+        { day: 'T2', height: 70 },
+        { day: 'T3', height: 85 },
+        { day: 'T4', height: 60 },
+        { day: 'T5', height: 90 },
+        { day: 'T6', height: 95 },
+        { day: 'T7', height: 100 },
+        { day: 'CN', height: 75 }
+    ];
+
     return (
-        <div className="p-8 space-y-8 max-w-[1600px] mx-auto">
-            {/* Thanh điều hướng phụ */}
-            <div className="flex justify-between items-center text-[12px]">
-                <div className="text-green-500 font-medium flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 bg-green-500 rounded-full"></span> Last updated now
-                </div>
-                <div className="flex gap-2">
-                    <button className="px-4 py-1.5 bg-white border border-gray-100 rounded-lg font-semibold text-gray-600 shadow-sm hover:shadow-md transition">Customize Widget</button>
-                    <button className="px-4 py-1.5 bg-[#6366F1] text-white rounded-lg font-semibold shadow-lg shadow-indigo-100 hover:bg-indigo-700 transition">Exports</button>
-                </div>
-            </div>
+        <div className="min-h-screen bg-gray-50">
 
-            {/* 4 Chỉ số hàng đầu - Card phẳng, viền cực mảnh */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <MiniStat title="Leads" value="129" trend="+2%" icon={faUsers} />
-                <MiniStat title="CLV" value="14d" trend="-4%" isDown icon={faSync} />
-                <MiniStat title="Convertion Rate" value="24%" trend="+2%" icon={faChartBar} />
-                <MiniStat title="Revenue" value="$1.4K" trend="-4%" isDown icon={faDollarSign} />
-            </div>
+            {/* Main Content */}
+            <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ">
+                {/* Welcome Section */}
+                <div className="mb-8">
+                    <h2 className="text-3xl font-bold text-gray-900">Xin chào, Admin!</h2>
+                    <p className="text-gray-600 mt-1">Đây là tổng quan hoạt động quán cafe hôm nay</p>
+                </div>
 
-            {/* Layout chính 2 cột */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Biểu đồ doanh thu lớn */}
-                <div className="lg:col-span-2 bg-white rounded-2xl border border-gray-100 p-8 shadow-sm">
-                    <div className="flex justify-between items-start mb-10">
-                        <div>
-                            <p className="text-gray-400 text-[13px] font-medium mb-1">Revenue</p>
-                            <div className="flex items-center gap-3">
-                                <h2 className="text-3xl font-bold text-gray-900">$32.209</h2>
-                                <span className="text-[11px] font-bold text-green-500 bg-green-50 px-2 py-0.5 rounded">+22% vs last month</span>
+                {/* Stats Cards */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    {stats.map((stat) => (
+                        <div
+                            key={stat.id}
+                            className={`bg-gradient-to-br ${stat.gradient} rounded-xl p-6 text-white transform transition-all duration-300 hover:-translate-y-1 hover:shadow-xl cursor-pointer`}
+                        >
+                            <div className="flex justify-between items-start mb-4">
+                                <div className={`${stat.bgIcon} p-3 rounded-lg`}>
+                                    <i className={`fas ${stat.icon} text-2xl`}></i>
+                                </div>
+                                <span className={`text-xs ${stat.changeColor || 'bg-green-400'} px-2 py-1 rounded-full`}>
+                  {stat.change}
+                </span>
                             </div>
+                            <h3 className="text-sm font-medium opacity-90">{stat.title}</h3>
+                            <p className="text-3xl font-bold mt-2">{stat.value}</p>
+                            <p className="text-xs opacity-75 mt-2">{stat.unit}</p>
                         </div>
-                        <div className="flex bg-gray-50 p-1 rounded-xl">
-                            {['1D', '1W', '1M', '6M', '1Y', 'ALL'].map(t => (
-                                <button key={t} className={`px-4 py-1 text-[10px] font-bold rounded-lg transition-all ${t==='1Y' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-400 hover:text-gray-600'}`}>{t}</button>
+                    ))}
+                </div>
+
+                {/* Charts and Quick Stats Row */}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                    {/* Revenue Chart */}
+                    <div className="lg:col-span-2 bg-white rounded-xl shadow-sm p-6 transform transition-all duration-300 hover:shadow-lg">
+                        <div className="flex justify-between items-center mb-6">
+                            <h3 className="text-lg font-semibold text-gray-900">Biểu đồ doanh thu</h3>
+                            <select
+                                value={timeFilter}
+                                onChange={(e) => setTimeFilter(e.target.value)}
+                                className="text-sm border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                            >
+                                <option value="7days">7 ngày qua</option>
+                                <option value="30days">30 ngày qua</option>
+                                <option value="month">Tháng này</option>
+                            </select>
+                        </div>
+                        <div className="h-64 flex items-end justify-between space-x-2">
+                            {chartData.map((data, index) => (
+                                <div
+                                    key={index}
+                                    className="flex-1 bg-gradient-to-t from-blue-500 to-blue-400 rounded-t-lg hover:from-blue-600 hover:to-blue-500 transition-all cursor-pointer group relative"
+                                    style={{ height: `${data.height}%` }}
+                                >
+                                    <div className="text-center text-white text-xs mt-2 font-medium">{data.day}</div>
+                                    <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                                        {(data.height * 200).toLocaleString()}đ
+                                    </div>
+                                </div>
                             ))}
                         </div>
                     </div>
-                    {/* Fake Chart Bars - Tinh chỉnh độ mảnh */}
-                    <div className="h-64 flex items-end justify-between gap-4 mt-4">
-                        {[45, 35, 40, 30, 42, 25, 40, 38, 30, 22, 18, 12].map((h, i) => (
-                            <div key={i} className="flex-1 flex flex-col items-center gap-4 group">
-                                <div className={`w-full max-w-[14px] rounded-t-[4px] transition-all duration-500 ${i === 11 ? 'bg-[#6366F1]' : 'bg-[#EEF2FF]'}`} style={{ height: `${h}%` }}></div>
-                                <span className="text-[10px] font-bold text-gray-300 group-hover:text-gray-900">M{i+1}</span>
-                            </div>
-                        ))}
+
+                    {/* Quick Stats */}
+                    <div className="bg-white rounded-xl shadow-sm p-6 transform transition-all duration-300 hover:shadow-lg">
+                        <h3 className="text-lg font-semibold text-gray-900 mb-6">Thống kê nhanh</h3>
+                        <div className="space-y-4">
+                            {quickStats.map((stat, index) => (
+                                <div key={index} className={`flex items-center justify-between p-3 ${stat.bg} rounded-lg transition-all hover:scale-105`}>
+                                    <div className="flex items-center space-x-3">
+                                        <div className={`${stat.iconBg} p-2 rounded-lg`}>
+                                            <i className={`fas ${stat.icon} text-white`}></i>
+                                        </div>
+                                        <div>
+                                            <p className="text-xs text-gray-600">{stat.label}</p>
+                                            <p className="text-lg font-semibold text-gray-900">{stat.value}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
 
-                {/* Widget Lịch & Sự kiện */}
-                <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
-                    <div className="flex justify-between items-center mb-6">
-                        <h3 className="text-[14px] font-bold text-gray-900">Calendar</h3>
-                        <FontAwesomeIcon icon={faEllipsisVertical} className="text-gray-300 cursor-pointer" />
+                {/* Recent Orders and Top Products */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {/* Recent Orders */}
+                    <div className="bg-white rounded-xl shadow-sm p-6 transform transition-all duration-300 hover:shadow-lg">
+                        <div className="flex justify-between items-center mb-6">
+                            <h3 className="text-lg font-semibold text-gray-900">Đơn hàng gần đây</h3>
+                            <a href="#" className="text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors">
+                                Xem tất cả
+                            </a>
+                        </div>
+                        <div className="space-y-4">
+                            {recentOrders.map((order) => (
+                                <div
+                                    key={order.id}
+                                    className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-all cursor-pointer"
+                                >
+                                    <div className="flex items-center space-x-4">
+                                        <div className={`${order.iconBg} p-3 rounded-lg`}>
+                                            <i className={`fas fa-receipt ${order.iconColor}`}></i>
+                                        </div>
+                                        <div>
+                                            <p className="font-medium text-gray-900">{order.id}</p>
+                                            <p className="text-sm text-gray-600">
+                                                {order.table} - {order.items} món
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div className="text-right">
+                                        <p className="font-semibold text-gray-900">{order.amount}</p>
+                                        <span
+                                            className={`text-xs px-2 py-1 rounded-full ${
+                                                order.status === 'completed'
+                                                    ? 'bg-green-100 text-green-700'
+                                                    : 'bg-yellow-100 text-yellow-700'
+                                            }`}
+                                        >
+                      {order.statusText}
+                    </span>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
                     </div>
-                    {/* Phần lịch render đơn giản */}
-                    <div className="grid grid-cols-7 text-center text-[11px] font-bold text-gray-400 mb-6 gap-y-4">
-                        {['Su','Mo','Tu','We','Th','Fr','Sa'].map(d => <div key={d}>{d}</div>)}
-                        {[5,6,7,8,9,10,11].map(n => (
-                            <div key={n} className={`py-1 cursor-pointer transition-all ${n===8 ? 'bg-[#6366F1] text-white rounded-full shadow-lg shadow-indigo-100' : 'text-gray-900 hover:bg-gray-50 rounded-full'}`}>{n}</div>
-                        ))}
-                    </div>
-                    <div className="space-y-4 mt-8">
-                        <EventItem title="Mesh Weekly Meeting" time="9:00 am - 10:00 am" color="bg-indigo-500" />
-                        <EventItem title="Gamification Demo" time="10:45 am - 11:45 am" color="bg-orange-400" />
+
+                    {/* Top Products */}
+                    <div className="bg-white rounded-xl shadow-sm p-6 transform transition-all duration-300 hover:shadow-lg">
+                        <div className="flex justify-between items-center mb-6">
+                            <h3 className="text-lg font-semibold text-gray-900">Sản phẩm bán chạy</h3>
+                            <a href="#" className="text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors">
+                                Xem tất cả
+                            </a>
+                        </div>
+                        <div className="space-y-4">
+                            {topProducts.map((product) => (
+                                <div key={product.id} className="flex items-center justify-between hover:bg-gray-50 p-2 rounded-lg transition-all">
+                                    <div className="flex items-center space-x-4">
+                                        <div className={`bg-gradient-to-br ${product.gradient} p-3 rounded-lg`}>
+                                            <i className={`fas ${product.icon} text-white text-xl`}></i>
+                                        </div>
+                                        <div>
+                                            <p className="font-medium text-gray-900">{product.name}</p>
+                                            <p className="text-sm text-gray-600">{product.sold} ly</p>
+                                        </div>
+                                    </div>
+                                    <div className="text-right">
+                                        <p className="font-semibold text-gray-900">{product.revenue}</p>
+                                        <div className="flex items-center space-x-1 mt-1">
+                                            <div className="w-24 bg-gray-200 rounded-full h-2">
+                                                <div
+                                                    className={`${product.barColor} h-2 rounded-full transition-all duration-500`}
+                                                    style={{ width: `${product.percentage}%` }}
+                                                ></div>
+                                            </div>
+                                            <span className="text-xs text-gray-600">{product.percentage}%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
-            </div>
+            </main>
         </div>
     );
-}
-// Sub-components hỗ trợ
-const MiniStat = ({ title, value, trend, isDown, icon }) => (
-    <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:border-gray-200 transition-all">
-        <div className="flex justify-between items-center mb-4">
-            <div className="w-9 h-9 border border-gray-50 rounded-full flex items-center justify-center text-gray-800 shadow-sm">
-                <FontAwesomeIcon icon={icon} className="text-[12px]" />
-            </div>
-            <FontAwesomeIcon icon={faEllipsisVertical} className="text-gray-200 text-[12px]" />
-        </div>
-        <p className="text-[13px] font-bold text-gray-400 mb-1">{title}</p>
-        <div className="flex items-center gap-3">
-            <span className="text-2xl font-bold text-gray-900">{value}</span>
-            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md ${isDown ? 'bg-red-50 text-red-500' : 'bg-green-50 text-green-500'}`}>
-                {isDown ? '↓' : '↑'} {trend}
-            </span>
-        </div>
-        <p className="text-[10px] text-gray-300 mt-2 font-medium">vs last week</p>
-    </div>
-);
-const EventItem = ({ title, time, color }) => (
-    <div className="flex gap-4 items-start p-3 hover:bg-gray-50 rounded-xl transition-all cursor-pointer">
-        <div className={`w-1 h-10 ${color} rounded-full`}></div>
-        <div>
-            <h4 className="text-[12px] font-bold text-gray-900">{title}</h4>
-            <p className="text-[10px] text-gray-400 font-medium mt-1">{time}</p>
-        </div>
-    </div>
-);
-export default Home;
+};
+
+export default CafeDashboard;

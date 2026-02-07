@@ -14,7 +14,7 @@ import TablePage from "../pages/table";
 import AccountPage from "../pages/account";
 import StatisticsPage from "../pages/statistics";
 // CUSTOMER
-import LayoutCustomer from "../pagescustomer/customer/pages/FoodOrderDashboard.jsx";
+import PageCustomer from "../pagescustomer/customer/index.jsx";
 import settings from "../pages/settings/Settings.jsx";
 
 // 404
@@ -25,7 +25,7 @@ export const publicRoutes = [
     { path: routes.login, component: Login },
     { path: routes.register, component: Register },
     { path: routes.forgotPassword, component: ForgotPassword },
-    {path: routes.customer, component: LayoutCustomer},
+    {path: routes.customer, component: PageCustomer},
     {path: routes.notfound, component: NotFound},
     {path:routes.help, component:NotFound }
 ];

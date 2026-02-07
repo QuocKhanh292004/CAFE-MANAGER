@@ -27,7 +27,7 @@ const CategoryManagement = () => {
         handleSearch,
         getBranches
     } = useCategoryManagement();
-
+   console.log(data ,'data danh mục nè ');
     // State cho pagination
     const [itemsPerPage, setItemsPerPage] = useState(5);
 

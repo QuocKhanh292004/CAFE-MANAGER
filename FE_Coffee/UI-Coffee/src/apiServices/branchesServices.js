@@ -7,7 +7,6 @@ export const getBranches = async () => {
         console.log('lấy data chi nhánh  ok !');
         return res.data;
     } catch (error) {
-
         console.log(error);
     }
 };

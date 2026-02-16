@@ -1,16 +1,16 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
-import { useAuth } from '../../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+// import { useAuth } from '../../context/AuthContext';
+// import { useNavigate } from 'react-router-dom';
 
-const LogoutButton = () => {
-    const { logout } = useAuth();
-    const navigate = useNavigate();
-
-    const handleLogout = () => {
-        logout();              //  xoá token + user
-        navigate('/login');
-    };
+const LogoutButton = ({handleLogout}) => {
+    // const { logout } = useAuth();
+    // const navigate = useNavigate();
+    //
+    // const handleLogout = () => {
+    //     logout();              //  xoá token + user
+    //     navigate('/login');
+    // };
 
     return (
         <button

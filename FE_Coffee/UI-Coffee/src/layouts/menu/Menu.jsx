@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faChevronUp,
@@ -10,10 +10,19 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import images from "../../assets/images";
 import LogoutButton from "../../components/logout/Logout.jsx";
+import { useAuth } from '../../context/AuthContext.jsx';
 function Menu({ menuItems = [], activePath, isOpen, onClose }) {
     const location = useLocation();
     const currentPath = activePath || location.pathname;
     const user = JSON.parse(localStorage.getItem('user'));
+
+    const { logout } = useAuth();
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        logout();
+        navigate('/login');
+    };
 
     return (
         <>
@@ -145,7 +154,7 @@ function Menu({ menuItems = [], activePath, isOpen, onClose }) {
                         </Link>
                     </div>
                     <div>
-                         <LogoutButton></LogoutButton>
+                         <LogoutButton handleLogout={handleLogout} />
                     </div>
                 </div>
             </aside>

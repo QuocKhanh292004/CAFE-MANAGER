@@ -52,7 +52,7 @@ const useCategoryManagement = () => {
         setLoading(prev => ({ ...prev, categories: true }));
         try {
             const response = await request.get(
-                `http://localhost:3000/api/menu/categories?branch_id=${branchId}`
+                `/menu/categories?branch_id=${branchId}`
             );
             console.log('Full Response:', response);
 

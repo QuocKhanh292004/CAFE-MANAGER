@@ -6,61 +6,94 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import usePagination from '../../hook/usePagination.js';
 import AccountModal from './AccountModal.jsx';
-import { branchUsers, deleteUser } from '../../apiServices/usersServices.js';
+import { getAllUsers, branchUsers, removeBranch } from '../../apiServices/usersServices.js';
 import { getBranches } from '../../apiServices/branchesServices.js';
 
-function Account() {
-    const [allAccounts, setAllAccounts] = useState([]);
-    const [branches, setBranches] = useState([]);
-    const [loading, setLoading] = useState(false);
+// Map role_name API → tiếng Việt
+const formatRoleName = (role) => {
+    const map = { admin: 'Admin', manager: 'Quản lý', staff: 'Nhân viên' };
+    return map[role?.toLowerCase()] || role || 'Nhân viên';
+};
 
-    const [filters, setFilters] = useState({
-        username: '',
-        branchId: ''
-    });
+// Chuẩn hoá 1 object user từ API thành format dùng trong UI
+const formatUser = (user) => ({
+    id:       user.user_id,
+    username: user.user_name,
+    role:     user.role?.role_name || '',
+    role_id:  user.role_id,
+    email:    user.email,
+    phone:    user.user_phone    || '',
+    address:  user.user_address  || '',
+    branches: user.branch_names  || '',
+    isLocked: user.lock_up       || false,
+});
+
+function Account() {
+    const [allAccounts, setAllAccounts]   = useState([]);   // toàn bộ user từ GET /users
+    const [displayList, setDisplayList]   = useState([]);   // danh sách đang hiện (all hoặc theo branch)
+    const [branches, setBranches]         = useState([]);
+    const [loading, setLoading]           = useState(false);
+
+    const [filters, setFilters] = useState({ username: '', branchId: '' });
     const [itemsPerPage, setItemsPerPage] = useState(5);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [modalMode, setModalMode] = useState('add');
+    const [isModalOpen, setIsModalOpen]   = useState(false);
+    const [modalMode, setModalMode]       = useState('add');
     const [selectedAccount, setSelectedAccount] = useState(null);
 
+    // ─── Load ban đầu ─────────────────────────────────────────────────────────
     useEffect(() => {
         loadBranches();
+        loadAllUsers();
     }, []);
 
+    // ─── Khi đổi chi nhánh: load theo branch hoặc hiện lại toàn bộ ──────────
     useEffect(() => {
         if (filters.branchId) {
             loadAccountsByBranch(filters.branchId);
         } else {
-            setAllAccounts([]);
+            setDisplayList(allAccounts);
         }
     }, [filters.branchId]);
 
+    // Khi allAccounts thay đổi mà không có branch filter → cập nhật displayList
+    useEffect(() => {
+        if (!filters.branchId) {
+            setDisplayList(allAccounts);
+        }
+    }, [allAccounts]);
+
     const loadBranches = async () => {
         try {
-            const branchData = await getBranches();
-            setBranches(branchData || []);
+            const data = await getBranches();
+            setBranches(data || []);
         } catch (error) {
             console.error('Lỗi khi tải danh sách chi nhánh:', error);
         }
     };
 
+    const loadAllUsers = async () => {
+        setLoading(true);
+        try {
+            const data = await getAllUsers();
+            const formatted = data.map(formatUser);
+            setAllAccounts(formatted);
+            // Chỉ set displayList khi không đang lọc theo branch
+            if (!filters.branchId) setDisplayList(formatted);
+        } catch (error) {
+            console.error('Lỗi khi tải danh sách user:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const loadAccountsByBranch = async (branchId) => {
-        if (!branchId) return;
         setLoading(true);
         try {
             const data = await branchUsers(branchId);
-            const formattedAccounts = data.map(user => ({
-                id: user.user_id,
-                username: user.username,
-                role: user.role_name || 'Nhân viên',
-                email: user.email,
-                branches: user.branch_names || '',
-                isLocked: user.is_locked || false,
-            }));
-            setAllAccounts(formattedAccounts);
+            setDisplayList(data.map(formatUser));
         } catch (error) {
-            console.error('Lỗi khi tải danh sách tài khoản:', error);
-            setAllAccounts([]);
+            console.error('Lỗi khi tải tài khoản theo chi nhánh:', error);
+            setDisplayList([]);
         } finally {
             setLoading(false);
         }
@@ -70,24 +103,29 @@ function Account() {
         if (filters.branchId) {
             loadAccountsByBranch(filters.branchId);
         } else {
-            alert('Vui lòng chọn chi nhánh để tìm kiếm');
+            loadAllUsers();
         }
     };
 
-    // ─── XÓA NGƯỜI DÙNG ───────────────────────────────────────────────────────
-    const handleDelete = async (account) => {
-        if (!window.confirm(`Bạn có chắc muốn xóa tài khoản "${account.username}"?`)) return;
+    // ─── Xóa khỏi chi nhánh ───────────────────────────────────────────────────
+    const handleRemoveFromBranch = async (account) => {
+        if (!filters.branchId) {
+            alert('Vui lòng chọn chi nhánh trước khi xóa.');
+            return;
+        }
+        if (!window.confirm(`Xóa "${account.username}" khỏi chi nhánh này?`)) return;
         try {
-            await deleteUser(account.id);
-            alert('Xóa tài khoản thành công!');
-            if (filters.branchId) loadAccountsByBranch(filters.branchId);
+            await removeBranch(account.id, Number(filters.branchId));
+            alert('Xóa khỏi chi nhánh thành công!');
+            await loadAccountsByBranch(filters.branchId);
         } catch (error) {
-            console.error('Lỗi khi xóa tài khoản:', error);
-            alert('Xóa tài khoản thất bại. Vui lòng thử lại.');
+            console.error('Lỗi khi xóa khỏi chi nhánh:', error);
+            alert('Xóa thất bại. Vui lòng thử lại.');
         }
     };
 
-    const filteredAccounts = allAccounts.filter(account => {
+    // ─── Filter tên ──────────────────────────────────────────────────────────
+    const filteredAccounts = displayList.filter(account => {
         if (filters.username) {
             return account.username.toLowerCase().includes(filters.username.toLowerCase());
         }
@@ -95,13 +133,8 @@ function Account() {
     });
 
     const {
-        currentPage: filteredCurrentPage,
-        totalPages: filteredTotalPages,
-        totalItems: filteredTotalItems,
-        startItem: filteredStartItem,
-        endItem: filteredEndItem,
-        currentData: filteredCurrentData,
-        goToPage: filteredGoToPage,
+        currentPage, totalPages, totalItems,
+        startItem, endItem, currentData, goToPage,
     } = usePagination(filteredAccounts, itemsPerPage);
 
     const handleOpenAdd = () => {
@@ -116,12 +149,18 @@ function Account() {
         setIsModalOpen(true);
     };
 
+    // Reload sau khi modal thành công
     const handleModalSuccess = () => {
-        if (filters.branchId) loadAccountsByBranch(filters.branchId);
+        if (filters.branchId) {
+            loadAccountsByBranch(filters.branchId);
+        } else {
+            loadAllUsers();
+        }
     };
 
     return (
         <div className="max-w-7xl mx-auto p-4 md:p-8 bg-white min-h-screen text-slate-700 font-sans">
+
             {/* Tiêu đề & Nút Thêm */}
             <div className="flex justify-between items-center mb-6">
                 <h2 className="text-xl md:text-2xl font-bold text-slate-800">Quản lý tài khoản</h2>
@@ -147,7 +186,7 @@ function Account() {
                     onChange={(e) => setFilters({ ...filters, branchId: e.target.value })}
                     className="w-full px-4 py-2.5 border border-slate-200 rounded-lg outline-none text-sm bg-slate-50/50 text-slate-700"
                 >
-                    <option value="">Chọn chi nhánh</option>
+                    <option value="">-- Tất cả chi nhánh --</option>
                     {branches.map(branch => (
                         <option key={branch.branch_id} value={branch.branch_id}>
                             {branch.branch_name}
@@ -185,19 +224,19 @@ function Account() {
                                     Đang tải dữ liệu...
                                 </td>
                             </tr>
-                        ) : filteredCurrentData.length === 0 ? (
+                        ) : currentData.length === 0 ? (
                             <tr>
                                 <td colSpan="6" className="py-8 text-center text-slate-400">
-                                    {filters.branchId
-                                        ? 'Không có dữ liệu'
-                                        : 'Vui lòng chọn chi nhánh để xem danh sách tài khoản'}
+                                    Không có dữ liệu
                                 </td>
                             </tr>
                         ) : (
-                            filteredCurrentData.map((account) => (
+                            currentData.map((account) => (
                                 <tr key={account.id} className="hover:bg-slate-50/50 transition-colors">
                                     <td className="py-4 px-4 font-medium text-slate-700">{account.username}</td>
-                                    <td className="py-4 px-4 border-x border-slate-50 text-slate-500">{account.role}</td>
+                                    <td className="py-4 px-4 border-x border-slate-50 text-slate-500">
+                                        {formatRoleName(account.role)}
+                                    </td>
                                     <td className="py-4 px-4 border-r border-slate-50 text-slate-500">{account.email}</td>
                                     <td className="py-4 px-4 border-r border-slate-50 text-slate-500 text-xs">{account.branches}</td>
                                     <td className="py-4 px-4 border-r border-slate-50 text-center">
@@ -218,9 +257,9 @@ function Account() {
                                                 <FontAwesomeIcon icon={faEdit} />
                                             </button>
                                             <button
-                                                onClick={() => handleDelete(account)}
+                                                onClick={() => handleRemoveFromBranch(account)}
                                                 className="text-slate-300 hover:text-red-500 transition-colors"
-                                                title="Xóa tài khoản"
+                                                title="Xóa khỏi chi nhánh"
                                             >
                                                 <FontAwesomeIcon icon={faTrashAlt} />
                                             </button>
@@ -234,13 +273,13 @@ function Account() {
                 </div>
 
                 {/* Phân trang */}
-                {!loading && filteredCurrentData.length > 0 && (
+                {!loading && currentData.length > 0 && (
                     <div className="px-6 py-4 bg-white border-t border-slate-100 flex flex-col md:flex-row justify-end items-center gap-6 text-[11px] font-bold uppercase tracking-wider text-slate-400">
                         <div className="flex items-center gap-2">
                             <span>Tổng số trên 1 trang:</span>
                             <select
                                 value={itemsPerPage}
-                                onChange={(e) => { setItemsPerPage(Number(e.target.value)); filteredGoToPage(1); }}
+                                onChange={(e) => { setItemsPerPage(Number(e.target.value)); goToPage(1); }}
                                 className="bg-transparent border-none focus:ring-0 cursor-pointer text-slate-600 outline-none"
                             >
                                 <option value={5}>5</option>
@@ -249,22 +288,22 @@ function Account() {
                         </div>
                         <div className="flex items-center gap-4">
                             <span className="text-slate-300">
-                                Hiển thị từ {filteredStartItem} - {filteredEndItem} trên tổng số {filteredTotalItems}
+                                Hiển thị {startItem} - {endItem} trên {totalItems}
                             </span>
                             <div className="flex items-center gap-1">
-                                <button onClick={() => filteredGoToPage(1)} disabled={filteredCurrentPage === 1} className="p-2 disabled:opacity-20">
+                                <button onClick={() => goToPage(1)} disabled={currentPage === 1} className="p-2 disabled:opacity-20">
                                     <FontAwesomeIcon icon={faAngleDoubleLeft} />
                                 </button>
-                                <button onClick={() => filteredGoToPage(filteredCurrentPage - 1)} disabled={filteredCurrentPage === 1} className="p-2 disabled:opacity-20">
+                                <button onClick={() => goToPage(currentPage - 1)} disabled={currentPage === 1} className="p-2 disabled:opacity-20">
                                     <FontAwesomeIcon icon={faAngleLeft} />
                                 </button>
                                 <span className="bg-[#1e293b] text-white w-7 h-7 flex items-center justify-center rounded-full shadow-md">
-                                    {filteredCurrentPage}
+                                    {currentPage}
                                 </span>
-                                <button onClick={() => filteredGoToPage(filteredCurrentPage + 1)} disabled={filteredCurrentPage === filteredTotalPages} className="p-2 disabled:opacity-20">
+                                <button onClick={() => goToPage(currentPage + 1)} disabled={currentPage === totalPages} className="p-2 disabled:opacity-20">
                                     <FontAwesomeIcon icon={faAngleRight} />
                                 </button>
-                                <button onClick={() => filteredGoToPage(filteredTotalPages)} disabled={filteredCurrentPage === filteredTotalPages} className="p-2 disabled:opacity-20">
+                                <button onClick={() => goToPage(totalPages)} disabled={currentPage === totalPages} className="p-2 disabled:opacity-20">
                                     <FontAwesomeIcon icon={faAngleDoubleRight} />
                                 </button>
                             </div>

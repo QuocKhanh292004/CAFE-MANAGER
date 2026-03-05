@@ -6,6 +6,8 @@ import {
     faShareNodes,
     faBars
 } from "@fortawesome/free-solid-svg-icons";
+import Notification from '../notification/index.js';
+
 
 function Header({ onToggleMenu }) {
     return (
@@ -52,10 +54,11 @@ function Header({ onToggleMenu }) {
 
                 <div className="flex items-center gap-3">
                     {/* Bell Icon với chấm đỏ tươi */}
-                    <button className="w-10 h-10 flex items-center justify-center border border-slate-200 rounded-xl hover:bg-slate-50 hover:border-slate-300 hover:text-indigo-600 text-slate-600 transition-all relative shadow-sm">
-                        <FontAwesomeIcon icon={faBell} className="text-[16px]" />
-                        <span className="absolute top-2.5 right-3 w-[7px] h-[7px] bg-rose-500 rounded-full border-2 border-white"></span>
-                    </button>
+                    {/*<button className="w-10 h-10 flex items-center justify-center border border-slate-200 rounded-xl hover:bg-slate-50 hover:border-slate-300 hover:text-indigo-600 text-slate-600 transition-all relative shadow-sm">*/}
+                    {/*    <FontAwesomeIcon icon={faBell} className="text-[16px]" />*/}
+                    {/*    <span className="absolute top-2.5 right-3 w-[7px] h-[7px] bg-rose-500 rounded-full border-2 border-white"></span>*/}
+                    {/*</button>*/}
+                  <Notification></Notification>
 
                     {/* Mail Icon với Badge đỏ đậm */}
                     <button className="w-10 h-10 flex items-center justify-center border border-slate-200 rounded-xl hover:bg-slate-50 hover:border-slate-300 hover:text-indigo-600 text-slate-600 transition-all relative shadow-sm">

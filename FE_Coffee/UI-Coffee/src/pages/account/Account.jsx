@@ -39,6 +39,7 @@ function Account() {
     const [isModalOpen, setIsModalOpen]   = useState(false);
     const [modalMode, setModalMode]       = useState('add');
     const [selectedAccount, setSelectedAccount] = useState(null);
+    const [selectedBranch, setSelectedBranch] = useState('');
 
     // ─── Load ban đầu ─────────────────────────────────────────────────────────
     useEffect(() => {
@@ -183,7 +184,17 @@ function Account() {
                 />
                 <select
                     value={filters.branchId}
-                    onChange={(e) => setFilters({ ...filters, branchId: e.target.value })}
+                    // onChange={(e) => setFilters({ ...filters, branchId: e.target.value })}
+                    onChange={(e) => {
+                        const branchId = e.target.value;
+
+                        const branch = branches.find(
+                            b => String(b.branch_id) === branchId
+                        );
+
+                        setFilters({ ...filters, branchId });
+                        setSelectedBranch(branch?.branch_name || '');
+                    }}
                     className="w-full px-4 py-2.5 border border-slate-200 rounded-lg outline-none text-sm bg-slate-50/50 text-slate-700"
                 >
                     <option value="">-- Tất cả chi nhánh --</option>
@@ -238,7 +249,7 @@ function Account() {
                                         {formatRoleName(account.role)}
                                     </td>
                                     <td className="py-4 px-4 border-r border-slate-50 text-slate-500">{account.email}</td>
-                                    <td className="py-4 px-4 border-r border-slate-50 text-slate-500 text-xs">{account.branches}</td>
+                                    <td className="py-4 px-4 border-r border-slate-50 text-slate-500">{selectedBranch}</td>
                                     <td className="py-4 px-4 border-r border-slate-50 text-center">
                                         <input
                                             type="checkbox"

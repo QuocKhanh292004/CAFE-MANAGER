@@ -12,6 +12,8 @@ import {
 import CategorySidebar from './CategorySidebar';
 import MenuList from './MenuList';
 import OrderPanel from './OrderPanel';
+import useCategoryManagement from "../../pages/category/Usecategory/useCategory.js";
+
 
 const Possystem = () => {
     const [selectedCategory, setSelectedCategory] = useState('Tất cả');
@@ -20,7 +22,10 @@ const Possystem = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [cart, setCart] = useState([]);
     const [selectedItem, setSelectedItem] = useState(null);
-
+    const {
+        data,
+    } = useCategoryManagement();
+    console.log(data ,'data danh mục nè ');
     // Categories data
     const categories = [
         { id: 1, name: 'Tất cả', icon: '🌸', color: 'from-pink-400 to-pink-500' },

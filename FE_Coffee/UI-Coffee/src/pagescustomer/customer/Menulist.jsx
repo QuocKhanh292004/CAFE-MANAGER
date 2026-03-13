@@ -58,5 +58,4 @@ const MenuList = ({ items, onAddToCart, selectedItem }) => {
         </div>
     );
 };
-
 export default MenuList;

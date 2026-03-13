@@ -1,5 +1,4 @@
 import React from 'react';
-
 const CategorySidebar = ({ categories, selectedCategory, onSelectCategory }) => {
     return (
         <div className="w-20 lg:w-28 bg-white shadow-lg flex flex-col items-center py-6 space-y-2 overflow-y-auto">

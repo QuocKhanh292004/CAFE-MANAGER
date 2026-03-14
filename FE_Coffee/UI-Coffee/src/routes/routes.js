@@ -19,12 +19,16 @@ import settings from "../pages/settings/Settings.jsx";
 
 // 404
 import NotFound from "../components/commons/Notfound.jsx";
+import VerifyOTP from '../pages/auth/forgotPassword/VerifyOTP.jsx';
+import ResetPassword from '../pages/auth/forgotPassword/ResetPassword.jsx';
 /* PUBLIC */
 
 export const publicRoutes = [
     { path: routes.login, component: Login },
     { path: routes.register, component: Register },
     { path: routes.forgotPassword, component: ForgotPassword },
+    { path: routes.resetPassword, component: ResetPassword },
+    { path: routes.verifyOpt, component: VerifyOTP },
     {path: routes.customer, component: PageCustomer},
     {path: routes.notfound, component: NotFound},
     {path:routes.help, component:NotFound }

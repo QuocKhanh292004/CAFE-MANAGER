@@ -61,17 +61,17 @@ function Header({ onToggleMenu }) {
                   <Notification></Notification>
 
                     {/* Mail Icon với Badge đỏ đậm */}
-                    <button className="w-10 h-10 flex items-center justify-center border border-slate-200 rounded-xl hover:bg-slate-50 hover:border-slate-300 hover:text-indigo-600 text-slate-600 transition-all relative shadow-sm">
-                        <FontAwesomeIcon icon={faEnvelope} className="text-[16px]" />
-                        <span className="absolute -top-1.5 -right-1.5 bg-rose-600 text-white text-[10px] font-black px-1.5 h-5 flex items-center justify-center rounded-full border-2 border-white shadow-md">
-                            12
-                        </span>
-                    </button>
+                    {/*<button className="w-10 h-10 flex items-center justify-center border border-slate-200 rounded-xl hover:bg-slate-50 hover:border-slate-300 hover:text-indigo-600 text-slate-600 transition-all relative shadow-sm">*/}
+                    {/*    <FontAwesomeIcon icon={faEnvelope} className="text-[16px]" />*/}
+                    {/*    <span className="absolute -top-1.5 -right-1.5 bg-rose-600 text-white text-[10px] font-black px-1.5 h-5 flex items-center justify-center rounded-full border-2 border-white shadow-md">*/}
+                    {/*        12*/}
+                    {/*    </span>*/}
+                    {/*</button>*/}
 
-                    {/* Share Icon */}
-                    <button className="w-10 h-10 flex items-center justify-center border border-slate-200 rounded-xl hover:bg-slate-50 hover:border-slate-300 hover:text-indigo-600 text-slate-600 transition-all shadow-sm">
-                        <FontAwesomeIcon icon={faShareNodes} className="text-[16px]" />
-                    </button>
+                    {/*/!* Share Icon *!/*/}
+                    {/*<button className="w-10 h-10 flex items-center justify-center border border-slate-200 rounded-xl hover:bg-slate-50 hover:border-slate-300 hover:text-indigo-600 text-slate-600 transition-all shadow-sm">*/}
+                    {/*    <FontAwesomeIcon icon={faShareNodes} className="text-[16px]" />*/}
+                    {/*</button>*/}
 
                     {/* Đường kẻ ngăn cách */}
                     <div className="h-8 w-[1px] bg-slate-200 mx-1"></div>

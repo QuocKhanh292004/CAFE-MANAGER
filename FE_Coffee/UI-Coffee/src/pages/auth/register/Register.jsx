@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {Link} from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import config from '../../../config';
 
 const Register = () => {
@@ -17,9 +17,9 @@ const Register = () => {
             return;
         }
         setError('');
-        console.log({name, email, password});
+        console.log({ name, email, password });
         // Logic gọi API đăng ký sẽ được thêm ở đây
-        alert("Đăng ký thành công (Dữ liệu đã được log ra console!)");
+        alert('Đăng ký thành công (Dữ liệu đã được log ra console!)');
     };
     return (<div className="min-h-screen flex w-full bg-white font-sans">
         {/* --------------------------
@@ -31,7 +31,7 @@ const Register = () => {
             {/* Ảnh nền: Barista làm việc trong ánh sáng tự nhiên */}
             <div
                 className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 hover:scale-105"
-                style={{backgroundImage: "url('https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?q=80&w=2678&auto=format&fit=crop')"}}
+                style={{ backgroundImage: 'url(\'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?q=80&w=2678&auto=format&fit=crop\')' }}
             ></div>
             {/* Lớp phủ tối màu (Gradient) */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent z-10"></div>
@@ -41,7 +41,7 @@ const Register = () => {
                 <div className="w-16 h-1 bg-yellow-400 mb-6"></div>
                 {/* Line trang trí */}
                 <h2 className="text-4xl font-bold mb-4 leading-snug">
-                    Khởi tạo <span className="text-yellow-400">hiệu suất</span> <br/>
+                    Khởi tạo <span className="text-yellow-400">hiệu suất</span> <br />
                     từ hôm nay!
                 </h2>
                 <p className="text-yellow-100/80 text-lg max-w-md">

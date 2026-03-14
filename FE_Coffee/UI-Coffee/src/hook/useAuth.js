@@ -1,14 +1,12 @@
 import { useMutation } from '@tanstack/react-query';
 import { requestOptService, resetPasswordService, verifyOtpService } from '../apiServices/authSevices.js';
 import { useNavigate } from 'react-router-dom';
-import { Toast } from 'primereact/toast';
-import { useRef } from 'react';
 
 export const useRequestOpt = () => {
     const navigate = useNavigate();
     return useMutation({
         mutationFn: async (email) => {
-            return await requestOptService(email);
+            return await requestOptService(email)
         },
         onSuccess: (data) => {
             console.log("ppp", data);

@@ -25,7 +25,6 @@ const CategoryManagement = () => {
         handleDelete,
         handleChangeBranch,
         handleSearch,
-        getBranches
     } = useCategoryManagement();
    console.log(data ,'data danh mục nè ');
     // State cho pagination

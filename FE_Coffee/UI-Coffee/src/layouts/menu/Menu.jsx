@@ -77,7 +77,7 @@ function Menu({ menuItems = [], activePath, isOpen, onClose }) {
                             <Link
                                 key={item.path}
                                 to={item.path}
-                                className={`group flex items-center rounded-lg px-3 py-2 text-[14px] transition-all
+                                className={`group flex items-center rounded-lg px-3 py-2 text-[14px] transition-all mb-[20px]
                                     ${isActive
                                     ? "bg-gray-100/80 text-gray-900 font-bold relative after:content-[''] after:absolute after:left-[-12px] after:w-1 after:h-5 after:bg-indigo-600 after:rounded-r-full"
                                     : "text-gray-500 hover:bg-gray-50 hover:text-gray-900"}`}
@@ -93,22 +93,22 @@ function Menu({ menuItems = [], activePath, isOpen, onClose }) {
 
                     {/* Section: Favorites */}
                     <div className="mt-6">
-                        <div className="flex items-center justify-between px-3 mb-2">
-                            <div className="flex items-center gap-2 text-gray-400">
-                                <FontAwesomeIcon icon={faChevronUp} className="text-[10px]" />
-                                <span className="text-[11px] font-bold uppercase tracking-wider">Favorites</span>
-                            </div>
-                            <div className="flex gap-2 text-gray-400">
-                                <FontAwesomeIcon icon={faEllipsis} className="text-[10px] cursor-pointer hover:text-gray-600" />
-                                <FontAwesomeIcon icon={faPlus} className="text-[10px] cursor-pointer hover:text-gray-600" />
-                            </div>
-                        </div>
+                        {/*<div className="flex items-center justify-between px-3 mb-2">*/}
+                        {/*    <div className="flex items-center gap-2 text-gray-400">*/}
+                        {/*        <FontAwesomeIcon icon={faChevronUp} className="text-[10px]" />*/}
+                        {/*        <span className="text-[11px] font-bold uppercase tracking-wider">Favorites</span>*/}
+                        {/*    </div>*/}
+                        {/*    <div className="flex gap-2 text-gray-400">*/}
+                        {/*        <FontAwesomeIcon icon={faEllipsis} className="text-[10px] cursor-pointer hover:text-gray-600" />*/}
+                        {/*        <FontAwesomeIcon icon={faPlus} className="text-[10px] cursor-pointer hover:text-gray-600" />*/}
+                        {/*    </div>*/}
+                        {/*</div>*/}
                         {/* Ví dụ Items con */}
-                        <div className="space-y-1">
-                            <SubMenuItem icon="" name="Companies" count="1222" />
-                            <SubMenuItem icon="" name="Contacts" count="898" />
-                            <SubMenuItem icon="" name="Meetings" count="32" />
-                        </div>
+                        {/*<div className="space-y-1">*/}
+                        {/*    <SubMenuItem icon="" name="Companies" count="1222" />*/}
+                        {/*    <SubMenuItem icon="" name="Contacts" count="898" />*/}
+                        {/*    <SubMenuItem icon="" name="Meetings" count="32" />*/}
+                        {/*</div>*/}
                     </div>
                 </nav>
 

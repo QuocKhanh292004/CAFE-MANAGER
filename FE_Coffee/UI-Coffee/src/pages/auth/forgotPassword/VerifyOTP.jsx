@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import config from '../../../config';
-import { BeforLoginBackgound } from '../../../components/commons/BeforLoginBackgound..jsx';
+import { BeforForgotPassword } from '../../../components/commons/BeforForgotPassword.jsx';
 import { useVerifyOpt } from '../../../hook/useAuth.js';
 
 const VerifyOTP = () => {
@@ -23,7 +23,7 @@ const VerifyOTP = () => {
     };
     return (
         <div className="min-h-screen flex w-full bg-white font-sans">
-            <BeforLoginBackgound />
+            <BeforForgotPassword />
             {/* --FORM QUÊN MẬT KHẨU */}
             <div className="flex w-full lg:w-1/2 justify-center items-center p-8 bg-white">
                 <div className="w-full max-w-md">

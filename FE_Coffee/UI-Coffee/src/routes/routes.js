@@ -1,7 +1,7 @@
 import routes from "../config/routes";
 import DefaultLayout from "../layouts/defaultLayout";
 // AUTH
-import Login from "../pages/auth/login/Login";
+import Login from "../pages/auth/logIn/LoginContainer.jsx";
 import Register from "../pages/auth/register/Register";
 import ForgotPassword from "../pages/auth/forgotPassword/ForgotPassword";
 // PAGES

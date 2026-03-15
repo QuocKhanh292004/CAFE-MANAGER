@@ -143,15 +143,15 @@ const LogIn = () => {
                         </button>
 
                         {/* Register */}
-                        <div className="text-center">
-                            <span className="text-sm text-gray-500">Chưa có tài khoản?</span>
-                            <Link
-                                to={config.routes.register}
-                                className="ml-1 font-bold text-yellow-700"
-                            >
-                                Đăng ký ngay
-                            </Link>
-                        </div>
+                        {/*<div className="text-center">*/}
+                        {/*    <span className="text-sm text-gray-500">Chưa có tài khoản?</span>*/}
+                        {/*    <Link*/}
+                        {/*        to={config.routes.register}*/}
+                        {/*        className="ml-1 font-bold text-yellow-700"*/}
+                        {/*    >*/}
+                        {/*        Đăng ký ngay*/}
+                        {/*    </Link>*/}
+                        {/*</div>*/}
                     </form>
                 </div>
             </div>

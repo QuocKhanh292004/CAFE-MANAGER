@@ -181,6 +181,7 @@ const useCategoryManagement = () => {
      * Tìm kiếm
      */
     const handleSearch = (term) => {
+
         setData(prev => ({ ...prev, searchTerm: term }));
     };
     /**
@@ -214,7 +215,7 @@ const useCategoryManagement = () => {
      * Lọc categories theo search term
      */
     const filteredCategories = data.categories.filter(cat =>
-        cat.category_name?.toLowerCase().includes(data.searchTerm.toLowerCase())
+        cat.category_name?.toLowerCase().includes(data.searchTerm.toLowerCase().trim())
     );
 
     return {

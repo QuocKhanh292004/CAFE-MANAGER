@@ -26,7 +26,7 @@ const CategoryManagement = () => {
         handleChangeBranch,
         handleSearch,
     } = useCategoryManagement();
-   console.log(data ,'data danh mục nè ');
+
     // State cho pagination
     const [itemsPerPage, setItemsPerPage] = useState(5);
 
@@ -42,10 +42,10 @@ const CategoryManagement = () => {
     } = usePagination(filteredCategories, itemsPerPage);
 
     // Debug effect
-    useEffect(() => {
-        console.log('Filtered categories:', filteredCategories);
-        console.log('Current page data:', currentData);
-    }, [filteredCategories, currentData]);
+    // useEffect(() => {
+    //     console.log('Filtered categories:', filteredCategories);
+    //     console.log('Current page data:', currentData);
+    // }, [filteredCategories, currentData]);
 
     return (
         <div className="max-w-6xl mx-auto p-4 md:p-8 bg-gradient-to-br from-slate-50 to-white min-h-screen">

@@ -140,6 +140,7 @@ const CategoryManagement = () => {
         },
 
         search: (term) => {
+            console.log('Searching for:', term);
             setData(prev => ({ ...prev, searchTerm: term }));
         }
     };

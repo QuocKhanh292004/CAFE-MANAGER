@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const OtpForm = ({ onVerifyOtp, onResendOtp, onError, isLoading, isResendLoading }) => {
+const OtpForm = ({ onVerifyOtp, isBackPage, onResendOtp, onError, isLoading, isResendLoading }) => {
     const [otp_code, setOtp] = useState('');
 
     const handleSubmit = (e) => {
@@ -50,10 +50,19 @@ const OtpForm = ({ onVerifyOtp, onResendOtp, onError, isLoading, isResendLoading
                 <button
                     type="button"
                     onClick={onResendOtp}
-                    className="ml-1 font-bold text-yellow-700"
+                    className="ml-1 font-bold text-yellow-700 cursor-pointer hover:text-gray-400"
                     disabled={isResendLoading}
                 >
                     {isResendLoading ? 'Đang gửi lại mã...' : 'Gửi lại mã'}
+                </button>
+            </div>
+            <div className="text-center">
+                <button
+                    type="button"
+                    onClick={isBackPage}
+                    className="ml-1 font-bold text-yellow-700 cursor-pointer  hover:text-gray-400"
+                >
+                    Quay lại login
                 </button>
             </div>
         </form>

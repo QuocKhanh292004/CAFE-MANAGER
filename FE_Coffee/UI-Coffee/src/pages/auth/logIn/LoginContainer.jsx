@@ -97,6 +97,7 @@ const LoginContainer = () => {
                             onError={error}
                             isLoading={verifyLoading}
                             isResendLoading={resendLoading}
+                            isBackPage={() => setOtpSent(false)}
                         />
                     )}
 

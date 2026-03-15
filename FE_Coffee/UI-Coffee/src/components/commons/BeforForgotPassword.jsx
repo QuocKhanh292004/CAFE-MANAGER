@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const BeforLoginBackgound = () => {
+export const BeforForgotPassword = () => {
     return (
         <div
             className="hidden lg:flex w-1/2 relative flex-col justify-end pb-16 px-12 overflow-hidden bg-stone-100">

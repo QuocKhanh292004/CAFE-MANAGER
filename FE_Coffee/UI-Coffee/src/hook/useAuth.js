@@ -1,8 +1,23 @@
 import { useMutation } from '@tanstack/react-query';
-import { requestOptService, resetPasswordService, verifyOtpService } from '../apiServices/authSevices.js';
+import {
+    loginService,
+    requestOptService,
+    resetPasswordService,
+    verifyLoginOtpService,
+    verifyOtpService,
+    resendLoginOtpService,
+} from '../apiServices/authSevices.js';
 import { useNavigate } from 'react-router-dom';
-import { Toast } from 'primereact/toast';
-import { useRef } from 'react';
+import config from '../config/index.js';
+import { useAuth } from '../context/AuthContext.jsx';
+
+export const useLogin = () => {
+    return useMutation({
+        mutationFn: async ({ email, password }) => {
+            return await loginService({ email, password });
+        },
+    });
+};
 
 export const useRequestOpt = () => {
     const navigate = useNavigate();
@@ -11,15 +26,14 @@ export const useRequestOpt = () => {
             return await requestOptService(email);
         },
         onSuccess: (data) => {
-            console.log("ppp", data);
             localStorage.setItem('resetMail', data?.data?.email);
             navigate('/verify-otp');
         },
         onError: (error) => {
-            console.log("Thất bại", error)
-        }
-    })
-}
+            console.log('Thất bại', error);
+        },
+    });
+};
 
 export const useVerifyOpt = () => {
     const navigate = useNavigate();
@@ -33,10 +47,10 @@ export const useVerifyOpt = () => {
             navigate('/reset-password');
         },
         onError: (error) => {
-            console.log("Thất bại", error)
-        }
-    })
-}
+            console.log('Thất bại', error);
+        },
+    });
+};
 
 export const useResetPassword = () => {
     const navigate = useNavigate();
@@ -49,7 +63,43 @@ export const useResetPassword = () => {
             localStorage.removeItem('resetToken');
         },
         onError: (error) => {
-            console.log("Thất bại", error)
-        }
-    })
-}
+            console.log('Thất bại', error);
+        },
+    });
+};
+
+export const useVerifyLoginOtp = () => {
+    const navigate = useNavigate();
+    const { login } = useAuth();
+
+    return useMutation({
+        mutationFn: async ({ email, otp_code }) => {
+            return await verifyLoginOtpService({ email, otp_code });
+        },
+        onSuccess: (data) => {
+            const responseData = data?.data;
+            if (responseData) {
+                const { token, user } = responseData;
+                login({ token, user });
+                navigate(config.routes.home, { replace: true });
+            }
+        },
+        onError: (error) => {
+            console.log('Thất bại', error);
+        },
+    });
+};
+
+export const useResendLoginOtp = () => {
+    return useMutation({
+        mutationFn: async ({ email }) => {
+            return await resendLoginOtpService({ email });
+        },
+        onSuccess: () => {
+            console.log('OTP resent successfully');
+        },
+        onError: (error) => {
+            console.log('Failed to resend OTP', error);
+        },
+    });
+};
